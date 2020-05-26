@@ -2,7 +2,7 @@
 
 ## Project setup
 ```
-npm install
+npm install YAS
 ```
 
 ### Compiles and hot-reloads for development
