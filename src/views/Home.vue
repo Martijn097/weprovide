@@ -466,6 +466,11 @@ export default {
 }
 @media only screen and (max-width: 480px) {
   .home{
+    .lightbulb{
+      img{
+        width: 90px;
+      }
+    } 
     .landings-content{
       margin: 30px;
       .landings-top{
@@ -522,6 +527,11 @@ export default {
 }
 @media only screen and (max-width: 320px) {
   .home{
+    .lightbulb{
+      img{
+        width: 80px;
+      }
+    }     
     .landings-content{
       margin: 20px;
       .landings-top{

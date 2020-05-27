@@ -64,8 +64,8 @@ h2{
   font-family: arboria, sans-serif;
   font-weight: 500;
   font-style: normal;
-  font-size: 72px;
-  line-height: 84px;
+  font-size: 60px;
+  line-height: 72px;
   letter-spacing: -1px;
   color: #13233A;
 }
@@ -82,13 +82,13 @@ h2{
     .container-right-wrapper{
       width: 100%;
       height: 100%;
-      padding: 200px;
+      padding: 80px;
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
       .card-panel{
-        padding: 200px;
+        padding: 80px 120px;
         width: 100%; 
         height: 100%;
         background-color: #fff;
@@ -224,6 +224,277 @@ h2{
       margin-bottom: 6em;
       img{
         width: 200px;
+      }
+    }
+  }
+}
+
+//MEDIA QUERIES
+@media only screen and (max-width: 1200px) {
+  h2{
+  }
+
+  .login-page{
+    flex-direction: column;
+    .container-right{
+      width: 100vw;
+      height: 80vh;
+      .container-right-wrapper{
+        .card-panel{
+          padding: 80px 160px;
+          .text-header{
+          }
+          .field{
+            &:nth-child(2)::before{
+            }
+            &:nth-child(3)::before{
+            }
+            &:nth-child(3){
+            }
+            .email-label{
+            }
+            .input-label{
+              &::placeholder{
+              }
+            }
+            .btn-login{
+              svg{
+              }
+              &:hover{
+                &:before{
+                }
+              }
+              &:before{
+              }
+            }
+          }
+        }
+      }
+    }
+    .container-left{
+      width: 100vw;
+      height: 20vh;
+      .wp-logo{
+        margin-bottom: 0em;
+        img{
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 768px) {
+  h2{
+  }
+
+  .login-page{
+    flex-direction: column;
+    .container-right{
+      width: 100vw;
+      height: 80vh;
+      .container-right-wrapper{
+        padding: 60px;
+        .card-panel{
+          padding: 60px 60px;
+          .text-header{
+          }
+          .field{
+            &:nth-child(2)::before{
+            }
+            &:nth-child(3)::before{
+            }
+            &:nth-child(3){
+            }
+            .email-label{
+            }
+            .input-label{
+              &::placeholder{
+              }
+            }
+            .btn-login{
+              svg{
+              }
+              &:hover{
+                &:before{
+                }
+              }
+              &:before{
+              }
+            }
+          }
+        }
+      }
+    }
+    .container-left{
+      width: 100vw;
+      height: 20vh;
+      .wp-logo{
+        margin-bottom: 0em;
+        img{
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 600px) {
+  h2{
+    font-size: 44px;
+  }
+
+  .login-page{
+    flex-direction: column;
+    .container-right{
+      width: 100vw;
+      height: 80vh;
+      .container-right-wrapper{
+        padding: 20px;
+        .card-panel{
+          padding: 40px 40px;
+          .text-header{
+          }
+          .field{
+            &:nth-child(2)::before{
+            }
+            &:nth-child(3)::before{
+            }
+            &:nth-child(3){
+            }
+            .email-label{
+            }
+            .input-label{
+              &::placeholder{
+              }
+            }
+            .btn-login{
+              svg{
+              }
+              &:hover{
+                &:before{
+                }
+              }
+              &:before{
+              }
+            }
+          }
+        }
+      }
+    }
+    .container-left{
+      width: 100vw;
+      height: 20vh;
+      .wp-logo{
+        margin-bottom: 0em;
+        img{
+          width: 140px;
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 480px) {
+  h2{
+    font-size: 44px;
+  }
+
+  .login-page{
+    flex-direction: column;
+    .container-right{
+      width: 100vw;
+      height: 80vh;
+      .container-right-wrapper{
+        padding: 20px;
+        .card-panel{
+          padding: 20px 20px;
+          .text-header{
+          }
+          .field{
+            &:nth-child(2)::before{
+            }
+            &:nth-child(3)::before{
+            }
+            &:nth-child(3){
+            }
+            .email-label{
+            }
+            .input-label{
+              &::placeholder{
+              }
+            }
+            .btn-login{
+              svg{
+              }
+              &:hover{
+                &:before{
+                }
+              }
+              &:before{
+              }
+            }
+          }
+        }
+      }
+    }
+    .container-left{
+      width: 100vw;
+      height: 20vh;
+      .wp-logo{
+        margin-bottom: 0em;
+        img{
+          width: 100px;
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 320px) {
+  h2{
+    font-size: 44px;
+  }
+
+  .login-page{
+    flex-direction: column;
+    .container-right{
+      width: 100vw;
+      height: 80vh;
+      .container-right-wrapper{
+        padding: 10px;
+        .card-panel{
+          padding: 10px 10px;
+          .text-header{
+          }
+          .field{
+            &:nth-child(2)::before{
+            }
+            &:nth-child(3)::before{
+            }
+            &:nth-child(3){
+            }
+            .email-label{
+            }
+            .input-label{
+              &::placeholder{
+              }
+            }
+            .btn-login{
+              svg{
+              }
+              &:hover{
+                &:before{
+                }
+              }
+              &:before{
+              }
+            }
+          }
+        }
+      }
+    }
+    .container-left{
+      width: 100vw;
+      height: 20vh;
+      .wp-logo{
+        margin-bottom: 0em;
+        img{
+        }
       }
     }
   }
