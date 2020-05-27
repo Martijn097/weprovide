@@ -84,8 +84,8 @@ const router = new VueRouter({
       component: () => import( '@/views/Choice')
     },
   ],
-  mode: 'hash',
-  base: '/projects/tool/',
+  mode: 'history',
+  // base: '/projects/tool/',
   router
 })
 

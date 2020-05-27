@@ -3,7 +3,7 @@
       
     <div ref="blackPage" class="black-page"></div>
     <div ref="lightBulb" class="lightbulb">
-      <img src="~@/assets/lightbulb6.gif" alt="Lightbulb">
+      <img src="~@/assets/img/lightbulb.gif" alt="Lightbulb">
     </div>
 
 
@@ -19,9 +19,9 @@
         <div class="landings-company">WeProvide</div>
         <div class="landings-message">Escape Room</div>
         <div class="landings-message-text">
-          Kijk of je het in je hebt om de code te kraken!
-          Met behulp van jouw kennis in huis probeer jij de puzzels op te lossen.
-          </div>
+        Je wordt wakker in een oude salon bar. Je hebt geen idee hoe je er terecht bent gekomen. Eén ding weet je zeker, ik moet hier wegkomen. <br><br>
+        Met behulp van jouw kennis op het gebied van webdevelopment kun je een poging wagen om te ontsnappen. ...Lukt jou het?
+        </div>
         <router-link :to="{ name: 'Name' }" class="start-button">
           <div class="left-bracket"></div>
           <div class="start-button-label">START</div>
@@ -35,7 +35,7 @@
 
       <div class="landings-bottom">
         <div ref="legals" class="landings-legals">
-          <a href="">Link</a> 
+          <a href="">Info</a> 
         </div>
         <div ref="socialMedia" class="social-media">
           <a href="https://www.facebook.com/martijn.muit">
@@ -49,20 +49,8 @@
           </a>
         </div>
       </div>
-    </div>
-    
-    <div class="sky">
-      <div class="cloud_one">
-        <img alt="cloud_one" src="~@/assets/cloud_1.png">
-      </div>
-      <div class="cloud_two">
-        <img alt="cloud_two" src="~@/assets/cloud_2.png">
-      </div>
-      <div class="cloud_three">
-        <img alt="cloud_three" src="~@/assets/cloud_2.png">
-      </div>
-    </div>
 
+    </div>
   </div>
 </template>
 
@@ -129,7 +117,6 @@ export default {
 </script>
 
 <style lang="scss" >
-
 .home{
   text-transform: uppercase;
   background: url("~@/assets/bg_escape.png");
@@ -158,7 +145,7 @@ export default {
     margin-top: -200px;
     opacity: 1;
     img{
-      width: 160px;
+      width: 100px;
     }
   }
   .landings-content{
@@ -174,8 +161,8 @@ export default {
         margin-top: -100%;
         opacity: 0;
         img{
-          width: 120px;
-          margin-top: -360px;
+          width: 100px;
+          margin-top: -200px;
         }
       }
     }
@@ -187,12 +174,12 @@ export default {
       .landings-company{
         font-family: Diner, sans-serif;
         margin-left: 20px;
-        font-size: 40px;
+        font-size: 32px;
         letter-spacing: 4px;
         line-height: 1;
         color: #EFD15B;
         text-align: left;
-        margin-bottom: 100px;
+        margin-bottom: 40px;
         &:before{
           content: "";
           display: block;
@@ -218,23 +205,22 @@ export default {
       }
       .landings-message{
         font-family: Diner, sans-serif;
-        font-size: 140px;
+        font-size: 120px;
         letter-spacing: 4px;
         line-height: 1;
         color: #EFD15B;
         text-align: left;
       }
       .landings-message-text{
-        font-size: 20px;
-        line-height: 24px;
-        letter-spacing: 4px;
+        font-weight: bolder;
+        font-size: 16px;
+        line-height: 20px;
+        letter-spacing: 1px;
         width: 750px;
         color: white;
         text-align: left;
         font-family: Futura;
         text-transform: uppercase;
-        // font-style: normal;
-        // font-weight: 500;
         margin-top: 40px;
       }
       .start-button{
@@ -298,9 +284,10 @@ export default {
       }
       .landings-key{
         display: flex;
-        margin-top: 100px;
+        margin-top: 40px;
         img{
-          position: absolute;
+          width: 500px;
+          position: relative;
         }
       }
     }
@@ -308,7 +295,7 @@ export default {
     .landings-bottom{
       display: flex;
       justify-content: space-between;
-      margin-top: 300px;
+      margin-top: 40px;
       .landings-legals{
         opacity: 0;
         margin-left: -100%;
@@ -338,92 +325,79 @@ export default {
       }
     }
   }
+}
+// 320px.
+// 480px.
+// 600px.
+// 768px.
+// 900px.
+// 1024px.
+// 1200px.
+@media only screen and (max-width: 1200px) {
+  .home{
+    .black-page{
+    }
+    .lightbulb{
+      img{
+      }
+    }
+    .landings-content{
+      .landings-top{
+        .landings-lightbulb{
+          img{
+          }
+        }
+      }
+      .landings-middle{
+        .landings-company{
+          &:before{
+          }
+          &:after{
+          }
+        }
+        .landings-message{
+        }
+        .landings-message-text{
+        }
+        .start-button{
+          &:hover .start-button-label{
+          }
+          &:hover .button-gradient{
+          }
+          .left-bracket{
+          }
+          .start-button-label{
+          }
+          .right-bracket{
+          }
+          .button-gradient{
+          }
+        }
+        .landings-key{
+          img{
+          }
+        }
+      }
 
-  .sky{
-    height: 100vh;
-    position: relative;
-    overflow: hidden;
-    top: 45%;
-    .cloud_one{
-      opacity: 10%;
-      background: url("~@/assets/cloud_1.png");
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 100%;
-      -webkit-animation: cloud_one 50s linear infinite;
-      -moz-animation: cloud_one 50s linear infinite;
-      -o-animation: cloud_one 50s linear infinite;
-      -webkit-transform: translate3d(0, 0, 0);
-      -moz-transform: translate3d(0, 0, 0);
-      -o-transform: translate3d(0, 0, 0);
-      img{
-        width: 1200px;
-      }
-    }
-    .cloud_two{
-      opacity: 10%;
-      background: url("~@/assets/cloud_2.png");
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      -webkit-animation: cloud_two 75s linear infinite;
-      -moz-animation: cloud_two 75s linear infinite;
-      -o-animation: cloud_two 75s linear infinite;
-      -webkit-transform: translate3d(0, 0, 0);
-      -moz-transform: translate3d(0, 0, 0);
-      -o-transform: translate3d(0, 0, 0);
-      img{
-        width: 1500px;
-      }
-    }
-    .cloud_three{
-      opacity: 10%;
-      background: url("~@/assets/cloud_2.png");
-      position: absolute;
-      transform: rotate(180deg);
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      -webkit-animation: cloud_two 100s linear infinite;
-      -moz-animation: cloud_two 100s linear infinite;
-      -o-animation: cloud_two 100s linear infinite;
-      -webkit-transform: translate3d(0, 0, 0);
-      -moz-transform: translate3d(0, 0, 0);
-      -o-transform: translate3d(0, 0, 0);
-      img{
-        width: 1500px;
+      .landings-bottom{
+        .landings-legals{
+          a{
+            &:hover{
+            }
+          }
+        }
+        .social-media{
+          a{
+            img{
+              &:hover{
+              }
+            }
+          }
+        }
       }
     }
   }
 }
-@keyframes cloud_one{
-  from {
-    transform: translate(1250px, 0);
-  }
-  to{
-    transform: translate(-1750px, 0);
-  }
-}
-@keyframes cloud_two{
-  from {
-    transform: translate(1550px, 0);
-  }
-  to{
-    transform: translate(-1750px, 0);
-  }
-}
-@keyframes cloud_three{
-  from {
-    transform: translate(1550px, 0);
-  }
-  to{
-    transform: translate(-1750px, 0);
-  }
-}
+
 
 </style>
