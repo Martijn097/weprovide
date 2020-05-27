@@ -78,6 +78,10 @@ body, html{
   font-family: Futura;
   // cursor: none; 
 }
+body.dashboard {
+  background-color: #F7F8F8;
+  overflow: scroll;
+}
 #app {
   font-family: 'Poppins', sans-serif;
   -webkit-font-smoothing: antialiased;

@@ -5,17 +5,22 @@
       <div class="dashboard-context">
         <h2>Recente kandidaten</h2>
         <div class="dashboard-cards">
-          <div class="dashboard-card" v-for="message in messages" :key="message.id">
-            <h3>{{ message.name }}</h3>
-            <div class="time">{{ message.timestamp }}</div>
-            <div class="results">
-              <h3>Quick results</h3>
-              <span><p><b>Functie:</b> Backend</p></span>
-              <span><p><b>Results:</b> {{ message.content }}</p></span>
-              <span><p><b>Time:</b> 10:23 mins</p></span>
-              <span><p><b>Date:</b> 15 Mei 2020 14:54</p></span>
+          <li v-for="message in messages" :key="message.id" class="dashboard-cards-items">
+            <div class="dashboard-card">
+              <div class="dashboard-name">
+                <h3>{{ message.name }}</h3>
+                <img src="@/assets/img/extra_person_icon.svg" alt="extra person icon">
+              </div>
+              <div class="time">{{ message.timestamp }}</div>
+              <div class="results">
+                <h3>Snel overzicht</h3>
+                <span><p><b>Functie:</b> Backend</p></span>
+                <span><p><b>Resultaten:</b> {{ message.content }}</p></span>
+                <span><p><b>Tijd:</b> 10:23 mins</p></span>
+                <span><p><b>Datum:</b> 15 Mei 2020 14:54</p></span>
+              </div>
             </div>
-          </div>
+          </li>
           <!-- <div class="dashboard-card" v-for="test in tests" :key="test.id">
             <h3>{{ test.name }}</h3>
           </div> -->
@@ -42,6 +47,9 @@ export default {
       tests: [],
       messages: []
     }
+  },
+  beforeCreate: function() {
+    document.body.className = 'dashboard';
   },
   created(){
     let ref = db.collection('messages').orderBy('timestamp')
@@ -96,78 +104,219 @@ h3{
   padding: 0;
 }
 .dashboard-page{
-  background-color: #F7F8F8;
-  color: black;
   height: 100vh;
-  width: 100%;
   .dashboard-container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;  
     position: relative;
-    top: 80px;
-    height: calc(100% - 80px);
+    top: 120px;
     .dashboard-context{
-      width: 1400px;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
       h2{
-        margin-bottom: 20px;
+        padding: 1.5rem;
         text-align: left;
       }
       .dashboard-cards{
         display: flex;
-        flex-direction: row;
         flex-wrap: wrap;
-        .dashboard-card{
-          width: 320px;
-          height: 320px;
-          background-color: white;
-          box-shadow: 0px 8px 32px rgba(0, 48, 117, 0.08);
-          border-radius: 6px;
-          padding: 30px;
-          margin-right: 40px;
-          margin-bottom: 40px;
-          &:before{
-            content: url("~@/assets/img/extra_person_icon.svg");
-            display: block;
-            position: absolute;
-            margin-left: 240px;
-          }
-          &:nth-child(4n){
-            margin-right: 0px;
-          }
-          h3{
-            text-transform: capitalize;
-            text-align: left;
-          }
-          .time{
-            font-weight: 400;
-            letter-spacing: 1px;
-            font-size: 14px;
-            color: #44556E;
-            text-align: left;
-          }
-          .results{
-            text-align: left;
-            margin-top: 40px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        .dashboard-cards-items{
+          display: flex;
+          padding: 1.5rem;
+          width: 25%;
+          .dashboard-card{
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0px 8px 32px rgba(0, 48, 117, 0.08);
+            border-radius: 6px;
+            padding: 30px;
+            width: 100%;
+            .dashboard-name{
+              display: flex;
+              justify-content: space-between;
+            }
             h3{
-              margin-bottom: 10px;
+              text-transform: capitalize;
+              text-align: left;
             }
-            b{
-              font-weight: bolder;
-            }
-            span{
+            .time{
               font-weight: 400;
               letter-spacing: 1px;
-              font-size: 16px;
-              line-height: 20px;
+              font-size: 10px;
               color: #44556E;
               text-align: left;
+            }
+            .results{
+              text-align: left;
+              margin-top: 40px;
+              h3{
+                margin-bottom: 10px;
+              }
+              b{
+                font-weight: bolder;
+              }
+              span{
+                font-weight: 400;
+                letter-spacing: 1px;
+                font-size: 14px;
+                line-height: 18px;
+                color: #44556E;
+                text-align: left;
+              }
             }
           }
         }
       }
     }
   }
+}
+
+//MEDIA QUERIES
+@media only screen and (max-width: 1200px) {
+  h2{
+  }
+  h3{
+  }
+  .dashboard-page{
+    .dashboard-container{
+      .dashboard-context{
+        h2{
+        }
+        .dashboard-cards{
+          .dashboard-cards-items{
+            width: 33.3333%;
+            .dashboard-card{
+              .dashboard-name{
+              }
+              h3{
+              }
+              .time{
+              }
+              .results{
+                h3{
+                }
+                b{
+                }
+                span{
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 1024px) {
+  h2{
+  }
+  h3{
+  }
+  .dashboard-page{
+    .dashboard-container{
+      .dashboard-context{
+        h2{
+        }
+        .dashboard-cards{
+          .dashboard-cards-items{
+            width: 50%;
+            .dashboard-card{
+              .dashboard-name{
+              }
+              h3{
+              }
+              .time{
+              }
+              .results{
+                h3{
+                }
+                b{
+                }
+                span{
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 600px) {
+  h2{
+  }
+  h3{
+  }
+  .dashboard-page{
+    .dashboard-container{
+      top: 80px;
+      .dashboard-context{
+        h2{
+        }
+        .dashboard-cards{
+          .dashboard-cards-items{
+            padding: 0.75rem;
+            width: 100%;
+            .dashboard-card{
+              .dashboard-name{
+              }
+              h3{
+              }
+              .time{
+              }
+              .results{
+                h3{
+                }
+                b{
+                }
+                span{
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 480px) {
+    h2{
+  }
+  h3{
+  }
+  .dashboard-page{
+    .dashboard-container{
+      .dashboard-context{
+        h2{
+        }
+        .dashboard-cards{
+          .dashboard-cards-items{
+            width: 100%;
+            .dashboard-card{
+              .dashboard-name{
+              }
+              h3{
+              }
+              .time{
+              }
+              .results{
+                h3{
+                }
+                b{
+                }
+                span{
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 320px) {
 }
 </style>

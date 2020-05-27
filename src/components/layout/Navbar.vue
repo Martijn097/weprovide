@@ -17,23 +17,17 @@
               <a href="#"><li>Selecteer kandidaat</li></a>
               <a href="#"><li>Beheer kandidaten</li></a>
               <a href="#"><li>Visualisatie</li></a>
-              <a href="#"><li class="link-down">weprovide.com</li></a>
             </div>
-            <div class="social-links">
-              <a href="https://www.facebook.com/martijn.muit">
-                <img src="~@/assets/img/facebook_dashboard.svg" alt="Facebook_WeProvide">
-              </a>
-              <a href="https://www.linkedin.com/in/martijn-muit-270432156/">
-                <img src="~@/assets/img/insta_dashboard.svg" alt="Instagram_WeProvide">
-              </a>
-              <a href="https://dribbble.com/Martijn097">
-                <img src="~@/assets/img/internet_dashboard.svg" alt="WeProvide Website">
-              </a>
+            <div class="bottom-link">
+              <a href="#"><li>weprovide.com</li></a>
             </div>
           </ul>
         </div>
       </nav>
-      <div class="navbar-header">We Provide Recruitment Tool Dashboard</div>
+      <div class="navbar-header">
+        <span class="full-text">We Provide Recruitment Tool Dashboard</span>
+        <span class="short-text">Dashboard</span>
+      </div>
       <div class="dropdown">
         <!-- <li v-if="!user"><router-link :to="{ name: 'Signup' }">Sign up</router-link></li> -->
         <!-- <div v-if="!user"><router-link :to="{ name: 'Login' }">Login</router-link></div> -->
@@ -99,9 +93,123 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    nav{
+      #menuToggle{
+        display: block;
+        position: relative;
+        z-index: 1;
+        -webkit-user-select: none;
+        user-select: none;
+        margin-top: 6px;
+        input{
+          display: block;
+          width: 40px;
+          height: 32px;
+          position: absolute;
+          top: -7px;
+          left: -5px;
+          cursor: pointer;
+          opacity: 0;
+          z-index: 2; 
+          -webkit-touch-callout: none;
+          &:checked ~ span{
+            opacity: 1;
+            transform: rotate(45deg) translate(-2px, -1px);
+            background: #13233A;
+          }
+          &:checked ~ span:nth-last-child(3){
+            opacity: 0;
+            transform: rotate(0deg) scale(0.2, 0.2);
+          }
+          &:checked ~ span:nth-last-child(2){
+            transform: rotate(-45deg) translate(0, -1px);
+          }
+          &:checked ~ #menu{
+            transform: none;
+          }
+        }
+        span{
+          display: block;
+          width: 33px;
+          height: 4px;
+          margin-bottom: 5px;
+          position: relative;
+          background: #13233A;
+          border-radius: 40px;
+          z-index: 1;
+          transform-origin: 4px 0px;
+          transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+                      background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+                      opacity 0.55s ease;
+          &:first-child{
+            transform-origin: 0% 0%;
+          }
+          &:nth-last-child(2){
+            transform-origin: 0% 100%;
+          }
+        }
+        #menu{
+          position: absolute;
+          width: 300px;
+          height: 100vh;
+          margin: -57px 0 0 -50px;
+          padding: 70px 50px 50px 50px;
+          background: white;
+          list-style-type: none;
+          -webkit-font-smoothing: antialiased;
+          transform-origin: 0% 0%;
+          transform: translate(-100%, 0);
+          transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+          box-shadow: 0px 8px 32px rgba(0, 48, 117, 0.08);
+          display: flex;
+          justify-content: space-between;
+          flex-direction: column;
+          .links{
+            .link-down{
+              margin-top: 40px;
+            }
+            a{
+              li{
+                transition: all .3s ease-out;
+                &:hover{
+                  margin-left: 20px;
+                }
+              }
+            }
+          }
+          .bottom-link{
+            text-align: left;
+            a{
+              li{
+                transition: all .3s ease-out;
+                &:hover{
+                  margin-left: 20px;
+                }
+              }
+            }
+          }
+          a{
+            text-decoration: none;
+            color: #13233A;
+            transition: color 0.3s ease;
+            li{
+              padding: 10px 0;
+              font-size: 20px;
+              text-align: left;
+            }
+          }
+        }
+      }
+    }
     .navbar-header{
       font-size: 24px;
       margin-top: -5px;
+      .full-text{
+        display: block;
+      }
+      .short-text{
+        display: none;
+      }
     }
     a{
       text-decoration: none;
@@ -145,112 +253,89 @@ export default {
   }
 }
 
-#menuToggle{
-  display: block;
-  position: relative;
-  z-index: 1;
-  -webkit-user-select: none;
-  user-select: none;
-  margin-top: 6px;
+//MEDIA QUERIES
+@media only screen and (max-width: 1200px) {
 }
-#menuToggle a{
-  text-decoration: none;
-  color: #13233A;
-  transition: color 0.3s ease;
+@media only screen and (max-width: 1024px) {
 }
-#menuToggle input{
-  display: block;
-  width: 40px;
-  height: 32px;
-  position: absolute;
-  top: -7px;
-  left: -5px;
-  cursor: pointer;
-  opacity: 0; /* hide this */
-  z-index: 2; /* and place it over the hamburger */
-  -webkit-touch-callout: none;
+@media only screen and (max-width: 800px) {
 }
-#menuToggle span{
-  display: block;
-  width: 33px;
-  height: 4px;
-  margin-bottom: 5px;
-  position: relative;
-  background: #13233A;
-  border-radius: 40px;
-  z-index: 1;
-  transform-origin: 4px 0px;
-  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
-              background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
-              opacity 0.55s ease;
-}
-#menuToggle span:first-child{
-  transform-origin: 0% 0%;
-}
-#menuToggle span:nth-last-child(2){
-  transform-origin: 0% 100%;
-}
-#menuToggle input:checked ~ span{
-  opacity: 1;
-  transform: rotate(45deg) translate(-2px, -1px);
-  background: #13233A;
-}
-#menuToggle input:checked ~ span:nth-last-child(3){
-  opacity: 0;
-  transform: rotate(0deg) scale(0.2, 0.2);
-}
-#menuToggle input:checked ~ span:nth-last-child(2){
-  transform: rotate(-45deg) translate(0, -1px);
-}
-#menu{
-  position: absolute;
-  width: 300px;
-  height: calc(100vh - 50px);
-  margin: 0 0 0 -50px;
-  padding: 50px;
-  background: white;
-  list-style-type: none;
-  -webkit-font-smoothing: antialiased;
-  transform-origin: 0% 0%;
-  transform: translate(-100%, 0);
-  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
-  box-shadow: 0px 8px 32px rgba(0, 48, 117, 0.08);
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-}
-#menu li{
-  padding: 10px 0;
-  font-size: 20px;
-  text-align: left;
-}
-#menuToggle input:checked ~ ul{
-  transform: none;
-}
-.links{
-  .link-down{
-    margin-top: 40px;
-  }
-  a{
-    li{
-      transition: all .3s ease-out;
-      &:hover{
-        margin-left: 20px;
+@media only screen and (max-width: 600px) {
+  .navbar{
+    .container{
+      nav{
+        #menuToggle{
+          input{
+            &:checked ~ span{
+            }
+            &:checked ~ span:nth-last-child(3){
+            }
+            &:checked ~ span:nth-last-child(2){
+            }
+            &:checked ~ #menu{
+            }
+          }
+          span{
+            &:first-child{
+            }
+            &:nth-last-child(2){
+            }
+          }
+          #menu{
+            .links{
+              .link-down{
+              }
+              a{
+                li{
+                  &:hover{
+                  }
+                }
+              }
+            }
+            .bottom-link{
+              a{
+                li{
+                  &:hover{
+                  }
+                }
+              }
+            }
+            a{
+              li{
+              }
+            }
+          }
+        }
+      }
+      .navbar-header{
+        .full-text{
+          display: none;
+        }
+        .short-text{
+          display: block;
+        }
+      }
+      a{
+      }
+      .brand-logo{
+      }
+      .dropdown{
+        &:hover .dropdown-content{
+        }
+        li{
+        }
+        .btn-logout{
+        }
+        .dropdown-content{
+          &:hover{
+          }
+        }
       }
     }
   }
 }
-.social-links{
-  text-align: left;
-  a{
-    padding-right: 15px;
-    img{
-      transition: opacity .3s ease-out;
-      &:hover{
-        opacity: 0.7;
-      }
-    }
-
-  }
+@media only screen and (max-width: 480px) {
+}
+@media only screen and (max-width: 320px) {
 }
 </style>
