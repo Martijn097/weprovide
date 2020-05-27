@@ -6,7 +6,6 @@
       <img src="~@/assets/img/lightbulb.gif" alt="Lightbulb">
     </div>
 
-
     <div class="landings-content">
 
       <div class="landings-top">
@@ -22,22 +21,19 @@
         Je wordt wakker in een oude salon bar. Je hebt geen idee hoe je er terecht bent gekomen. Eén ding weet je zeker, ik moet hier wegkomen. <br><br>
         Met behulp van jouw kennis op het gebied van webdevelopment kun je een poging wagen om te ontsnappen. ...Lukt jou het?
         </div>
-        <router-link :to="{ name: 'Name' }" class="start-button">
-          <div class="left-bracket"></div>
-          <div class="start-button-label">START</div>
-          <div class="right-bracket"></div>
-          <div class="button-gradient"></div>
-        </router-link>
         <div class="landings-key">
           <img src="~@/assets/img/key.png" alt="key">
         </div>
       </div>
 
-      <div class="landings-bottom">
-        <div ref="legals" class="landings-legals">
-          <a href="">Info</a> 
-        </div>
-        <div ref="socialMedia" class="social-media">
+      <div ref="bottom" class="landings-bottom">
+        <router-link :to="{ name: 'Name' }"  class="start-button">
+          <div class="left-bracket"></div>
+          <div class="start-button-label">START</div>
+          <div class="right-bracket"></div>
+          <div class="button-gradient"></div>
+        </router-link>
+        <div class="social-media">
           <a href="https://www.facebook.com/martijn.muit">
             <img src="~@/assets/img/facbook.svg" alt="Facebook_WeProvide">
           </a>
@@ -75,8 +71,7 @@ export default {
     const { lightBulb } = this.$refs
     const { lightBulb2 } = this.$refs
     const { text } = this.$refs
-    const { legals } = this.$refs
-    const { socialMedia } = this.$refs
+    const { bottom } = this.$refs
     const timeline = new TimelineLite()
 
     timeline.to(blackPage, 1, {
@@ -97,19 +92,13 @@ export default {
       marginTop: "0%",
       ease: Power2.easeInOut,
     }, '-=1') //run the animation 1.5s early
-    timeline.to(legals, 1.5, {
-      opacity: 1,
-      marginLeft: "0%",
-      ease: Power2.easeInOut,
-    }, '-=1.5') //run the animation 1.5s early
-    timeline.to(socialMedia, 1.5, {
-      opacity: 1,
-      marginRight: "0%",
-      ease: Power2.easeInOut,
-    }, '-=1.5') //run the animation 1.5s early
     timeline.to(text, 1.5, {
       opacity: 1,
       marginLeft: "0%",
+      ease: Power2.easeInOut,
+    }, '-=1.5') //run the animation 1.5s early
+    timeline.to(bottom, 3, {
+      opacity: 1,
       ease: Power2.easeInOut,
     }, '-=1.5') //run the animation 1.5s early
   }
@@ -145,13 +134,13 @@ export default {
     margin-top: -200px;
     opacity: 1;
     img{
-      width: 100px;
+      width: 90px;
     }
   }
   .landings-content{
     z-index: 1;
     margin: 0 auto;
-    width: 1400px;
+    width: 1200px;
     margin: 100px;
     .landings-top{
       display: flex;
@@ -161,7 +150,7 @@ export default {
         margin-top: -100%;
         opacity: 0;
         img{
-          width: 100px;
+          width: 90px;
           margin-top: -200px;
         }
       }
@@ -188,8 +177,8 @@ export default {
           height: 8px;
           border-radius: 50%;
           background-color: #EFD15B;
-          margin-left: -20px;
-          margin-top: 15px;
+          margin-left: -17px;
+          margin-top: 12px;
         }
         &:after{
           content: "";
@@ -199,8 +188,8 @@ export default {
           height: 8px;
           border-radius: 50%;
           background-color: #EFD15B;
-          margin-left: 155px;
-          margin-top: -25px;
+          margin-left: 130px;
+          margin-top: -21px;
         }
       }
       .landings-message{
@@ -216,13 +205,30 @@ export default {
         font-size: 16px;
         line-height: 20px;
         letter-spacing: 1px;
-        width: 750px;
+        width: 600px;
         color: white;
         text-align: left;
         font-family: Futura;
         text-transform: uppercase;
         margin-top: 40px;
+        margin-bottom: -40px;
       }
+      .landings-key{
+        display: flex;
+        margin-top: 40px;
+        img{
+          width: 500px;
+          margin-left: -120px;
+          position: relative;
+        }
+      }
+    }
+    .landings-bottom{
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 20px;
+      opacity: 0;
       .start-button{
         cursor: pointer;
         position: relative;
@@ -230,8 +236,6 @@ export default {
         height: 50px;
         box-sizing: border-box;
         text-align: left;
-        margin-top: 40px;
-        width: 130px;
         &:hover .start-button-label{
           color: white;
         }
@@ -249,13 +253,14 @@ export default {
           background-size: contain;
         }
         .start-button-label{
+          text-align: center;
           position: relative;
           top: -18px;
           display: inline-block;
           color: #EFD15B;
           font-size: 20px;
           letter-spacing: 2px;
-          margin: 0 8px;
+          width: 200px;
           line-height: 50px;
           height: 100%;
           transition: color .3s ease-out;
@@ -273,7 +278,7 @@ export default {
           top: 0;
           left: 0;
           margin-left: 1px;
-          width: 127px;
+          width: 242px;
           height: calc(100% - 0px);
           border: 2px solid;
           -o-border-image: linear-gradient(180deg,white 0,#EFD15B 50%,#EFD15B) 2;
@@ -282,40 +287,12 @@ export default {
           transition: opacity .3s ease-out;
         }
       }
-      .landings-key{
-        display: flex;
-        margin-top: 40px;
-        img{
-          width: 500px;
-          position: relative;
-        }
-      }
-    }
-
-    .landings-bottom{
-      display: flex;
-      justify-content: space-between;
-      margin-top: 40px;
-      .landings-legals{
-        opacity: 0;
-        margin-left: -100%;
-        cursor: pointer;
-        a{
-          font-size: 30px;
-          color: #EFD15B;
-          transition: opacity .3s ease-out;
-          text-decoration: none;
-          &:hover{
-            opacity: 0.7;
-          }
-        }
-      }
       .social-media{
-        opacity: 0;
-        margin-right: -100%;
         a{
-          padding-right: 15px;
+          padding-right: 20px;
           img{
+            width: 24px;
+            height: 24px;
             transition: opacity .3s ease-out;
             &:hover{
               opacity: 0.7;
@@ -326,66 +303,44 @@ export default {
     }
   }
 }
-// 320px.
-// 480px.
-// 600px.
-// 768px.
-// 900px.
-// 1024px.
-// 1200px.
-@media only screen and (max-width: 1200px) {
+//MEDIA QUERIES
+@media only screen and (max-width: 1024px) {
   .home{
-    .black-page{
-    }
-    .lightbulb{
-      img{
-      }
-    }
     .landings-content{
       .landings-top{
         .landings-lightbulb{
           img{
+            width: 80px;
           }
         }
       }
       .landings-middle{
         .landings-company{
+          font-size: 26px;
           &:before{
+            margin-left: -17px;
+            margin-top: 9px;
           }
           &:after{
+            margin-left: 116px;
+            margin-top: -17px;
           }
         }
         .landings-message{
+          font-size: 100px;
         }
         .landings-message-text{
-        }
-        .start-button{
-          &:hover .start-button-label{
-          }
-          &:hover .button-gradient{
-          }
-          .left-bracket{
-          }
-          .start-button-label{
-          }
-          .right-bracket{
-          }
-          .button-gradient{
-          }
+          font-size: 14px;
+          line-height: 18px;
+          width: 500px;
         }
         .landings-key{
           img{
+            width: 400px;
           }
         }
       }
-
       .landings-bottom{
-        .landings-legals{
-          a{
-            &:hover{
-            }
-          }
-        }
         .social-media{
           a{
             img{
@@ -399,5 +354,255 @@ export default {
   }
 }
 
+@media only screen and (max-width: 768px) {
+  .home{
+    .landings-content{
+      margin: 60px;
+      .landings-top{
+        .landings-lightbulb{
+          img{
+            width: 50px;
+          }
+        }
+      }
+      .landings-middle{
+        .landings-company{
+          font-size: 26px;
+          &:before{
+            margin-left: -17px;
+            margin-top: 9px;
+          }
+          &:after{
+            margin-left: 116px;
+            margin-top: -17px;
+          }
+        }
+        .landings-message{
+          font-size: 100px;
+        }
+        .landings-message-text{
+          font-size: 14px;
+          line-height: 18px;
+          width: 100%;
+        }
+        .landings-key{
+          display: none;
+        }
+      }
 
+      .landings-bottom{
+        margin-top: 80px;
+        flex-direction: column;
+        align-items: flex-start;
+        .social-media{
+          margin-top: 40px;
+          a{
+            img{
+              width: 24px;
+              height: 24px;
+              &:hover{
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 600px) {
+  .home{
+    .landings-content{
+      margin: 40px;
+      .landings-top{
+        .landings-lightbulb{
+          img{
+            width: 50px;
+          }
+        }
+      }
+      .landings-middle{
+        .landings-company{
+          font-size: 26px;
+          &:before{
+            margin-left: -17px;
+            margin-top: 9px;
+          }
+          &:after{
+            margin-left: 116px;
+            margin-top: -17px;
+          }
+        }
+        .landings-message{
+          font-size: 72px;
+        }
+        .landings-message-text{
+          font-size: 12px;
+          line-height: 16px;
+          width: 100%;
+        }
+        .landings-key{
+          display: none;
+        }
+      }
+
+      .landings-bottom{
+        margin-top: 80px;
+        flex-direction: column;
+        align-items: flex-start;
+        .social-media{
+          margin-top: 40px;
+          a{
+            img{
+              width: 24px;
+              height: 24px;
+              &:hover{
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 480px) {
+  .home{
+    .landings-content{
+      margin: 30px;
+      .landings-top{
+        .landings-lightbulb{
+          display: none;
+          img{
+            width: 50px;
+          }
+        }
+      }
+      .landings-middle{
+        .landings-company{
+          font-size: 26px;
+          &:before{
+            margin-left: -17px;
+            margin-top: 9px;
+          }
+          &:after{
+            margin-left: 116px;
+            margin-top: -17px;
+          }
+        }
+        .landings-message{
+          font-size: 72px;
+        }
+        .landings-message-text{
+          font-size: 12px;
+          line-height: 16px;
+          width: 100%;
+        }
+        .landings-key{
+          display: none;
+        }
+      }
+
+      .landings-bottom{
+        margin-top: 80px;
+        flex-direction: column;
+        align-items: flex-start;
+        .social-media{
+          margin-top: 40px;
+          a{
+            img{
+              width: 24px;
+              height: 24px;
+              &:hover{
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 320px) {
+  .home{
+    .landings-content{
+      margin: 20px;
+      .landings-top{
+        .landings-lightbulb{
+          display: none;
+          img{
+            width: 50px;
+          }
+        }
+      }
+      .landings-middle{
+        .landings-company{
+          font-size: 20px;
+          &:before{
+            width: 6px;
+            height: 6px;
+            margin-left: -15px;
+            margin-top: 6px;
+          }
+          &:after{
+            width: 6px;
+            height: 6px;
+            margin-left: 96px;
+            margin-top: -15px;
+          }
+        }
+        .landings-message{
+          font-size: 52px;
+        }
+        .landings-message-text{
+          font-size: 10px;
+          line-height: 14px;
+          width: 100%;
+        }
+        .landings-key{
+          display: none;
+        }
+      }
+
+      .landings-bottom{
+        margin-top: 80px;
+        flex-direction: column;
+        align-items: flex-start;
+        .start-button{
+          height: 40px;
+          &:hover .start-button-label{
+          }
+          &:hover .button-gradient{
+          }
+          .left-bracket{
+            width: 16px;
+            height: 42px;
+          }
+          .start-button-label{
+            top: -18px;
+            font-size: 16px;
+            width: 160px;
+            line-height: 75px;
+            height: 100%;
+          }
+          .right-bracket{
+            width: 16px;
+            height: 42px;
+          }
+          .button-gradient{
+            width: 192px;
+          }
+        }
+        .social-media{
+          margin-top: 40px;
+          a{
+            img{
+              width: 18px;
+              height: 18px;
+              &:hover{
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 </style>
