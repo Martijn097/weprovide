@@ -67,7 +67,8 @@ export default {
       db.collection('tests').add({
         name: this.firstname + ' ' + this.lastname
       }).then(() => {
-        this.$router.push({ name: 'Play', params: { name: this.firstname + ' ' + this.lastname }})
+        // this.$router.push({ name: 'Play', params: { name: this.firstname + ' ' + this.lastname }})
+        this.$router.push({ name: 'Jobs', params: { name: this.firstname + ' ' + this.lastname }})
       }).catch(err => {
         console.log(err)
       })

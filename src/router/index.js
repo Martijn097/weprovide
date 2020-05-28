@@ -46,7 +46,7 @@ const router = new VueRouter({
         if(to.params.name){
           next()
         } else{
-          next({ name: 'Name' })
+          next({ name: 'Jobs' })
         }
       }
     },

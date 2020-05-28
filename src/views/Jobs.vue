@@ -6,7 +6,7 @@
         <h3>SELECTEER DE FUNCTIE WAARVOOR JE SOLLICITEERT</h3>
       </div>
       <div class="jobs-offers">
-        <input type="radio" id="test" name="test" value="frontend" v-model="x">
+        <input type="radio" id="test" name="test" value="frontend" v-model="job">
         <label for="test">
           <div class="left-bracket"></div>
           <div class="start-button-label">Frontend</div>
@@ -14,7 +14,7 @@
           <div class="button-gradient"></div>
         </label>
 
-        <input checked="checked" type="radio" id="test2" name="test" value="backend" v-model="x">
+        <input type="radio" id="test2" name="test" value="backend" v-model="job">
         <label for="test2">
           <div class="left-bracket"></div>
           <div class="start-button-label">Backend</div>
@@ -22,7 +22,7 @@
           <div class="button-gradient"></div>
         </label>
 
-        <input type="radio" id="test3" name="test" value="devops" v-model="x">
+        <input type="radio" id="test3" name="test" value="devops" v-model="job">
         <label for="test3">
           <div class="left-bracket"></div>
           <div class="start-button-label">Devops</div>
@@ -30,28 +30,26 @@
           <div class="button-gradient"></div>
         </label>   
       </div>
-      
+
       <div class="jobs-continue">
-        <router-link v-on:click="doDit" :to="({ name: 'Play' })" v-show="x === 'frontend'" v-model="frontend" class="start-button">
+        <button @click="displayRadioValue" v-show="job === 'frontend'" type="button" class="start-button">
           <div class="left-bracket"></div>
           <div class="start-button-label">Play</div>
           <div class="right-bracket"></div>
           <div class="button-gradient"></div>
-        </router-link>
-
-        <router-link v-on:click="doDit" :to="({ name: 'Play' })" v-show="x === 'backend'" v-model="backend" class="start-button">
+        </button>
+        <button @click="displayRadioValue" v-show="job === 'backend'" type="button" class="start-button">
           <div class="left-bracket"></div>
           <div class="start-button-label">Play</div>
           <div class="right-bracket"></div>
           <div class="button-gradient"></div>
-        </router-link>
-
-        <router-link v-on:click="doDit" :to="({ name: 'Play' })" v-show="x === 'devops'" v-model="devops" class="start-button">
+        </button>
+        <button @click="displayRadioValue" v-show="job === 'devops'" type="button" class="start-button">
           <div class="left-bracket"></div>
           <div class="start-button-label">Play</div>
           <div class="right-bracket"></div>
           <div class="button-gradient"></div>
-        </router-link>
+        </button>
       </div>
 
     </div>
@@ -59,15 +57,15 @@
 </template> 
 
 <script>
+import db from '@/firebase/init'
+
 export default {
   name: 'Jobs',
   data(){
     return{
       x: '',
       jobs: null,
-      frontend: null,
-      backend: null,
-      devops: null,
+      job: null,
     }
   },
   components: {
@@ -75,12 +73,25 @@ export default {
   mounted(){
   },
   methods: {
+    displayRadioValue(){
+    var ele = document.getElementsByTagName('input'); 
+      
+    var i;
+    for(i = 0; i < ele.length; i++) { 
+      if(ele[i].type="radio") { 
+        if(ele[i].checked) 
+          db.collection('hoi').add({
+            jobs: this.job
+          }).then(() => {
+            this.$router.push({ name: 'Play', params: { name: this.name }})
+          }).catch(err => {
+            console.log(err)
+          })
+        }
+      } 
+    },
     doDit(e){
-      db.collection('hoi').add({
-        jobs: this.frontend
-      }).catch(err => {
-        console.log(err)
-      })
+     
     }
   }
 }
@@ -188,6 +199,16 @@ export default {
       display: flex;
       justify-content: flex-end;
       margin-top: 60px;
+      button{
+        background: none;
+        color: inherit;
+        border: none;
+        padding: 0;
+        font: inherit;
+        cursor: pointer;
+        outline: inherit;
+        text-transform: uppercase;
+      }
       .start-button{
         cursor: pointer;
         position: relative;

@@ -13,7 +13,7 @@ import db from '@/firebase/init'
 
 export default {
   name: 'NewMessage',
-  props: ['name'],
+  props: ['name', 'jobs'],
   data(){
     return{
       newMessage: null,

@@ -69,7 +69,7 @@ import 'moment/locale/nl';
 
 export default {
   name: 'Play',
-  props: ['name'],
+  props: ['name', 'jobs'],
   components: {
     NewMessage
   },
