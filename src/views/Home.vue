@@ -277,8 +277,8 @@ export default {
           position: absolute;
           top: 0;
           left: 0;
-          margin-left: 1px;
-          width: 242px;
+          margin-left: 2px;
+          width: 241px;
           height: calc(100% - 0px);
           border: 2px solid;
           -o-border-image: linear-gradient(180deg,white 0,#EFD15B 50%,#EFD15B) 2;

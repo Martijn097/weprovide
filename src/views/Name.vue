@@ -201,14 +201,137 @@ export default {
         position: absolute;
         top: 0;
         left: 0;
-        margin-left: 1px;
-        width: 242px;
+        margin-left: 2px;
+        width: 241px;
         height: calc(100% - 0px);
         border: 2px solid;
         -o-border-image: linear-gradient(180deg,white 0,#EFD15B 50%,#EFD15B) 2;
         border-image: linear-gradient(180deg,white 0,#EFD15B 50%,#EFD15B) 2;
         opacity: 0;
         transition: opacity .3s ease-out;
+      }
+    }
+  }
+}
+
+//MEDIA QUERIES
+@media only screen and (max-width: 600px) {
+  .name{
+    #loading{
+    }
+    p{
+    } 
+    .card-container{
+      margin: 80px;
+      h2{
+      }
+      .field{
+        .input-label{
+          &:focus{
+          }
+        }      
+        &:before{
+        }
+      } 
+      .start-button{
+        &:hover .start-button-label{
+        }
+        &:hover .button-gradient{
+        }
+        .left-bracket{
+        }
+        .start-button-label{
+        }
+        .right-bracket{
+        }
+        .button-gradient{
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 480px) {
+  .name{
+    #loading{
+    }
+    p{
+    } 
+    .card-container{
+      margin: 40px;
+      h2{
+      }
+      .field{
+        .input-label{
+          &:focus{
+          }
+        }      
+        &:before{
+        }
+      } 
+      .start-button{
+        &:hover .start-button-label{
+        }
+        &:hover .button-gradient{
+        }
+        .left-bracket{
+        }
+        .start-button-label{
+        }
+        .right-bracket{
+        }
+        .button-gradient{
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 320px) {
+  .name{
+    #loading{
+    }
+    p{
+    } 
+    .card-container{
+      margin: 40px;
+      h2{
+      }
+      .field{
+        .input-label{
+          border-bottom: 1px solid #EFD15B;
+          font-size: 16px;
+          &:focus{
+          }
+        }      
+        &:before{
+        }
+      } 
+      .start-button{
+        height: 40px;
+        margin-top: 20px;
+        &:hover .start-button-label{
+        }
+        &:hover .button-gradient{
+        }
+        .left-bracket{
+          width: 16px;
+          height: 42px;
+        }
+        .start-button-label{
+          top: -18px;
+          font-size: 16px;
+          width: 160px;
+          line-height: 75px;
+          height: 100%;
+        }
+        .right-bracket{
+          width: 16px;
+          height: 42px;
+        }
+        .button-gradient{
+          margin-left: 0px;
+          margin-top: 1px;
+          width: 192px;
+        }
       }
     }
   }
