@@ -11,8 +11,8 @@
           <div class="time">{{ message.timestamp }}</div>
           <div class="results">
             <h3>Snel overzicht</h3>
-            <span><p><b>Functie:</b> Backend</p></span>
-            <span><p><b>Resultaten:</b> {{ message.content }}</p></span>
+            <span><p><b>Functie:</b> {{ message.jobs }} </p></span>
+            <span><p><b>Resultaten:</b> {{ message.content }} </p></span>
             <span><p><b>Tijd:</b> 10:23 mins</p></span>
             <span><p><b>Datum:</b> 15 Mei 2020 14:54</p></span>
           </div>
@@ -55,6 +55,7 @@ import 'moment/locale/nl';
             this.messages.push({
               id: doc.id,
               name: doc.data().name,
+              jobs: doc.data().jobs,
               content: doc.data().content,
               timestamp: moment(doc.data().timestamp).format('ll'),
             })

@@ -1,8 +1,9 @@
 <template>
-  <div class="play">
-    <NewMessage :name="name" />
+  <div class="play" v-cloak>
+    <NewMessage :name="name" :jobs="jobs" />
     <li v-for="message in messages" :key="message.id">
       <span>{{ message.name }}</span>
+      <span>{{ message.jobs }}</span>
       <span>{{ message.content }}</span>
       <span>{{ message.timestamp }}</span>
     </li>
@@ -111,6 +112,7 @@ export default {
           this.messages.push({
             id: doc.id,
             name: doc.data().name,
+            jobs: doc.data().jobs,
             content: doc.data().content,
             timestamp: moment(doc.data().timestamp).format('ll')
           })
@@ -427,12 +429,52 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+[v-cloak] > * {
+  display: none;
+}
+[v-cloak]::before{
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear-infinite;
+  animation: spin 2s linear infinite;
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .play{
   width: 100%;
 	height: 100%;
   background-color: #ffffff;
   margin: 0;
   overflow: hidden;
+  li{
+    color: black;
+  }
   #blocker {
     position: absolute;
     width: 100%;

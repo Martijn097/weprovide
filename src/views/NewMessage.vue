@@ -13,11 +13,10 @@ import db from '@/firebase/init'
 
 export default {
   name: 'NewMessage',
-  props: ['name', 'jobs'],
+  props: ['name', 'jobs'], 
   data(){
     return{
       newMessage: null,
-      yak: null,
       feedback: null,
     }
   },
@@ -27,8 +26,8 @@ export default {
         db.collection('messages').add({
           content: this.newMessage,
           name: this.name,
+          jobs: this.jobs,
           timestamp: Date.now(),
-          yak: this.yak
         }).catch(err => {
           console.log(err)
         })
@@ -41,7 +40,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.new-message{
-  color: black;
+.play{
+  .new-message{
+    color: black;
+  }
 }
 </style>

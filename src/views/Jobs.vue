@@ -61,6 +61,7 @@ import db from '@/firebase/init'
 
 export default {
   name: 'Jobs',
+  props: ['name'],
   data(){
     return{
       x: '',
@@ -83,7 +84,7 @@ export default {
           db.collection('hoi').add({
             jobs: this.job
           }).then(() => {
-            this.$router.push({ name: 'Play', params: { name: this.name }})
+            this.$router.push({ name: 'Play', params: { name: this.firstname + ' ' + this.lastname }})
           }).catch(err => {
             console.log(err)
           })
