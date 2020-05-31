@@ -1,5 +1,8 @@
 <template>
-  <div class="play" v-cloak>
+  <div class="play">
+    <section id="loading-screen">
+      <div id="loader"></div>
+    </section>
     <NewMessage :name="name" :jobs="jobs" />
     <li v-for="message in messages" :key="message.id">
       <span>{{ message.name }}</span>
@@ -55,6 +58,7 @@
 <script>
 import * as THREE from 'three';
 import PointerLockControls from 'three-pointerlock'
+import ColladaLoader from 'three-collada-loader'
 import CubeObject from './../views/CubeObject'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import Stats from 'stats.js'
@@ -89,6 +93,8 @@ export default {
       instructions: undefined,
       havePointerLock: undefined,
       intersects: [],
+      loadingScreen: undefined,
+      loadingManager: null,
 
       moveForward: false,
       moveBackward: false,
@@ -141,6 +147,16 @@ export default {
       document.addEventListener( 'keyup', this.onKeyUp, false );
 
       this.raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10);
+      
+      this.loadingManager = new THREE.LoadingManager( () => {
+      
+        this.loadingScreen = document.getElementById( 'loading-screen' );
+        this.loadingScreen.classList.add( 'fade-out' );
+        
+        // optional: remove loader from DOM via event listener
+        this.loadingScreen.addEventListener( 'transitionend', this.onTransitionEnd );
+        
+      } );
 
       // this.moveObjectA();
 
@@ -163,7 +179,7 @@ export default {
       this.element.appendChild(this.renderer.domElement);
     },
     initCreateGround () {
-      const loader = new GLTFLoader()
+      const loader = new GLTFLoader(this.loadingManager)
       loader.load('/blender/grond.glb', gltf => {
           this.scene.add(gltf.scene)
           gltf.scene.position.set(0, 0, -100)
@@ -171,6 +187,7 @@ export default {
         },
         function (xhr) {
           console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+          
         },
         // called when loading has errors
         function (error) {
@@ -179,7 +196,7 @@ export default {
       );
     },
     initCreateHouse () {
-      const loader = new GLTFLoader()
+      const loader = new GLTFLoader(this.loadingManager)
       loader.load('/blender/room.glb', gltf => {
           this.scene.add(gltf.scene)
           // gltf.scene.rotation.y = 180
@@ -227,6 +244,9 @@ export default {
       }
 
       this.renderer.render( this.scene, this.camera );
+    },
+    onTransitionEnd( event ) {
+      event.target.remove();
     },
     handleInput (delta) {
       this.velocity.z += (this.moveY * 10.0 * delta)
@@ -429,49 +449,66 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-[v-cloak] > * {
-  display: none;
-}
-[v-cloak]::before{
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  z-index: 1;
-  width: 150px;
-  height: 150px;
-  margin: -75px 0 0 -75px;
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid #3498db;
-  width: 120px;
-  height: 120px;
-  -webkit-animation: spin 2s linear-infinite;
-  animation: spin 2s linear infinite;
-}
-@-webkit-keyframes spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-  }
-}
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 .play{
   width: 100%;
 	height: 100%;
   background-color: #ffffff;
   margin: 0;
   overflow: hidden;
+  #loading-screen {
+    position: absolute;
+    z-index: 16;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    opacity: 1;
+    transition: 1s opacity;
+    #loader {
+      display: block;
+      position: relative;
+      left: 50%;
+      top: 50%;
+      width: 150px;
+      height: 150px;
+      margin: -75px 0 0 -75px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: #9370DB;
+      -webkit-animation: spin 2s linear infinite;
+      animation: spin 2s linear infinite;
+    }
+    #loader:before {
+      content: "";
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      right: 5px;
+      bottom: 5px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: #BA55D3;
+      -webkit-animation: spin 3s linear infinite;
+      animation: spin 3s linear infinite;
+    }
+    #loader:after {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      right: 15px;
+      bottom: 15px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: #FF00FF;
+      -webkit-animation: spin 1.5s linear infinite;
+      animation: spin 1.5s linear infinite;
+    }
+  }
+  #loading-screen.fade-out {
+    opacity: 0;
+  }
   li{
     color: black;
   }
@@ -603,7 +640,30 @@ export default {
   opacity: 0;
 }
 
-
+@-webkit-keyframes spin {
+    0%   {
+      -webkit-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes spin {
+    0%  {
+      -webkit-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
 
 @-webkit-keyframes m-1-ball {
   0%, 65%, 100% {

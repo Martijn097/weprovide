@@ -44,8 +44,6 @@ export default {
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
 
-
-
 @font-face {
   font-family: Diner;
   src: url('~@/assets/fonts/Diner-Obese-webfont.woff') format("woff");
