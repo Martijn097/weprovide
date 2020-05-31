@@ -2,6 +2,9 @@
   <div class="play">
     <section id="loading-screen">
       <div id="loader"></div>
+      <div class="lock">
+        <img src="@/assets/img/lock.png" alt="lock">
+      </div>
     </section>
     <NewMessage :name="name" :jobs="jobs" />
     <li v-for="message in messages" :key="message.id">
@@ -142,31 +145,25 @@ export default {
       this.scene.add(this.controls.getObject());
 
       document.addEventListener('wheel', this.onScrollWheel, false);
-
       document.addEventListener( 'keydown', this.onKeyDown, false );
       document.addEventListener( 'keyup', this.onKeyUp, false );
 
       this.raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10);
       
+      // loading manager
       this.loadingManager = new THREE.LoadingManager( () => {
-      
+        // if loaded fade out loading screen
         this.loadingScreen = document.getElementById( 'loading-screen' );
         this.loadingScreen.classList.add( 'fade-out' );
-        
-        // optional: remove loader from DOM via event listener
+        // removing loadingscreen from DOM
         this.loadingScreen.addEventListener( 'transitionend', this.onTransitionEnd );
-        
       } );
 
       // this.moveObjectA();
-
       this.initCreateGround();
       this.initCreateHouse();
-
       this.initCube();
-
       this.initRenderer();
-
       window.addEventListener('resize', this.onWindowResize, false);
     },
     initRenderer () {
@@ -465,45 +462,34 @@ export default {
     background-color: #000000;
     opacity: 1;
     transition: 1s opacity;
+    .lock{
+      position: absolute;
+      z-index: 16;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+      opacity: 1;
+      transition: 1s opacity;
+      -webkit-animation:grow 4s infinite;
+      img{
+        width: 50px;
+      }
+    }
     #loader {
       display: block;
       position: relative;
-      left: 50%;
-      top: 50%;
-      width: 150px;
-      height: 150px;
-      margin: -75px 0 0 -75px;
-      border-radius: 50%;
-      border: 3px solid transparent;
-      border-top-color: #9370DB;
-      -webkit-animation: spin 2s linear infinite;
-      animation: spin 2s linear infinite;
-    }
-    #loader:before {
-      content: "";
-      position: absolute;
-      top: 5px;
-      left: 5px;
-      right: 5px;
-      bottom: 5px;
-      border-radius: 50%;
-      border: 3px solid transparent;
-      border-top-color: #BA55D3;
-      -webkit-animation: spin 3s linear infinite;
-      animation: spin 3s linear infinite;
-    }
-    #loader:after {
-      content: "";
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      right: 15px;
-      bottom: 15px;
-      border-radius: 50%;
-      border: 3px solid transparent;
-      border-top-color: #FF00FF;
-      -webkit-animation: spin 1.5s linear infinite;
-      animation: spin 1.5s linear infinite;
+      top: 0;
+      left: 0;
+      background: linear-gradient(90deg,black,#EFD15B,  #EFD15B,#EFD15B, black);
+      background-size: 400% 100%;
+      width: 400%;
+      height: 15px;
+      background-repeat: no-repeat;
+      -webkit-animation: AnimationName 5s ease infinite;
+      -moz-animation: AnimationName 5s ease infinite;
+      animation: AnimationName 5s ease infinite;
     }
   }
   #loading-screen.fade-out {
@@ -640,30 +626,29 @@ export default {
   opacity: 0;
 }
 
-@-webkit-keyframes spin {
-    0%   {
-      -webkit-transform: rotate(0deg);
-      -ms-transform: rotate(0deg);
-      transform: rotate(0deg);
-    }
-    100% {
-      -webkit-transform: rotate(360deg);
-      -ms-transform: rotate(360deg);
-      transform: rotate(360deg);
-    }
-  }
-  @keyframes spin {
-    0%  {
-      -webkit-transform: rotate(0deg);
-      -ms-transform: rotate(0deg);
-      transform: rotate(0deg);
-    }
-    100% {
-      -webkit-transform: rotate(360deg);
-      -ms-transform: rotate(360deg);
-      transform: rotate(360deg);
-    }
-  }
+@-webkit-keyframes AnimationName {
+  0%{background-position:0% 50%}
+  50%{background-position:125% 50%}
+  100%{background-position:0% 50%}
+}
+@-moz-keyframes AnimationName {
+  0%{background-position:0% 50%}
+  50%{background-position:125% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes AnimationName {
+  0%{background-position:0% 50%}
+  50%{background-position:125% 50%}
+  100%{background-position:0% 50%}
+}
+
+
+@-webkit-keyframes grow {
+  0% {-webkit-transform: scale( 0.8 );-moz-transform: scale( 0.8 );-o-transform: scale( 0.8 );-ms-transform: scale( 0.8 );transform: scale( 0.8 );}
+  50% {-webkit-transform: scale( 1 );-moz-transform: scale( 1 );-o-transform: scale( 1 );-ms-transform: scale( 1 );transform: scale( 1 );}
+  100% {-webkit-transform: scale( 0.8 );-moz-transform: scale( 0.8 );-o-transform: scale( 0.8 );-ms-transform: scale( 0.8 );transform: scale( 0.8 );}
+}
+
 
 @-webkit-keyframes m-1-ball {
   0%, 65%, 100% {
