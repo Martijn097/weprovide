@@ -25,9 +25,9 @@
           <div class="btn-gradient"></div>
           <img src="~@/assets/img/map.svg" alt="Map">
         </div>
-        <div class="fullscreen">
+        <div @click="openFullscreen" class="fullscreen">
           <div class="btn-gradient"></div>
-          <img src="~@/assets/img/fullscreen.svg" alt="Fullscreen">
+          <img src="~@/assets/img/minimize.svg" alt="Fullscreen">
         </div>
         <div class="sound">
           <div class="btn-gradient"></div>
@@ -101,6 +101,7 @@ export default {
       intersects: [],
       loadingScreen: undefined,
       loadingManager: null,
+      elem: null,
 
       moveForward: false,
       moveBackward: false,
@@ -270,7 +271,6 @@ export default {
       this.controls.getObject().position.y = y;
       this.controls.getObject().position.z = z;
     },
-
     onKeyDown (event) {
       switch ( event.keyCode ) {
         case 38: // up
@@ -333,7 +333,6 @@ export default {
       }
       this.moveY = deltaY;
     },
-
     isOnObject () {
       this.raycaster.ray.origin.copy(this.controls.getObject().position);
       this.raycaster.ray.origin.y -= 10;
@@ -341,13 +340,11 @@ export default {
       let intersections = this.raycaster.intersectObjects(this.objects);
       return intersections.length > 0;
     },
-    
     onWindowResize () {
       this.camera.aspect = window.innerWidth / window.innerHeight;
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(window.innerWidth, window.innerHeight);
     },
-
     pointerlockchange () {
       if ( document.pointerLockElement === this.element || document.mozPointerLockElement === this.element || document.webkitPointerLockElement === this.element ) {
         this.controls.enabled = true;
@@ -377,6 +374,36 @@ export default {
         document.removeEventListener( 'fullscreenchange', this.fullscreenchange );
         document.removeEventListener( 'mozfullscreenchange', this.fullscreenchange );
         this.element.requestPointerLock();
+      }
+    },
+    openFullscreen (){
+      this.elem = document.getElementById("map");
+      this.elem = document.documentElement;
+      // this.elem.addEventListener("click", this.openFullscreen, false);
+
+      // this.elem.innerHTML = "Exit Fullscreen";
+      if (!document.fullscreenElement &&    // alternative standard method
+          !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen();
+        } else if (document.documentElement.msRequestFullscreen) {
+          document.documentElement.msRequestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) {
+          document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullscreen) {
+          document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+        }
+      } else {
+        // this.elem.innerHTML = "Fullscreen"
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
       }
     }
   },
