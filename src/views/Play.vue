@@ -4,22 +4,46 @@
       <div id="loader"></div>
       <div class="lock">
         <img src="@/assets/img/lock.png" alt="lock">
+        <h4>Loading</h4>
       </div>
     </section>
-    <NewMessage :name="name" :jobs="jobs" />
+    <!-- <NewMessage :name="name" :jobs="jobs" />
     <li v-for="message in messages" :key="message.id">
       <span>{{ message.name }}</span>
       <span>{{ message.jobs }}</span>
       <span>{{ message.content }}</span>
       <span>{{ message.timestamp }}</span>
-    </li>
+    </li> -->
     <transition name="fade">
     <div id="blocker" ref="blocker" v-show="!controlsEnabled">
-			<div id="instructions" ref="instructions" @click="clickOnInstructions">
-				<span style="font-size:40px">Click to play {{ this.name }} </span>
-				<br />
-				(W, A, S, D = Move, SPACE = Jump, MOUSE = Look aroundt)
+			<div id="instructions" ref="instructions">
+				<span>Escape Room</span>
+        <h4>Menu</h4>
 			</div>
+       <div class="wrapper">
+        <div class="map">
+          <div class="btn-gradient"></div>
+          <img src="~@/assets/img/map.svg" alt="Map">
+        </div>
+        <div class="fullscreen">
+          <div class="btn-gradient"></div>
+          <img src="~@/assets/img/fullscreen.svg" alt="Fullscreen">
+        </div>
+        <div class="sound">
+          <div class="btn-gradient"></div>
+          <img src="~@/assets/img/speaker.svg" alt="Sound">
+        </div>
+        <div class="lock">
+          <div class="btn-gradient"></div>
+          <img src="~@/assets/img/lock.svg" alt="Lock">
+        </div>
+      </div>
+      <div @click="clickOnInstructions" class="start-button">
+        <div class="left-bracket"></div>
+        <div class="start-button-label">CONTINUE</div>
+        <div class="right-bracket"></div>
+        <div class="button-gradient"></div>
+      </div>
 		</div>
     </transition>
     <div class="controls">
@@ -28,30 +52,10 @@
       <button @click="movePosition(15,5,0)">Move c</button>
     </div>
     <div class="container" ref="canvas">
-      <div class="wrapper">
-        <div class="left-down">
-          <div class="map">
-            <img src="~@/assets/img/facbook.svg" alt="Facebook_WeProvide">
-          </div>
-        </div>
-        <div class="right-down">
-          <div class="fullscreen">
-            <img src="~@/assets/img/facbook.svg" alt="Facebook_WeProvide">
-          </div>
-          <div class="sound">
-            <img src="~@/assets/img/speaker.svg" alt="Sound">
-          </div>
-        </div>
+      <div class="center">
+        <div class="marker"></div>
         <div class="center-down">
           <div class="mouse m-1"></div>
-        </div>
-        <div class="top-right">
-          <div class="lock">
-            <img src="~@/assets/img/lock.svg" alt="Lock">
-          </div>
-        </div>
-        <div class="center">
-          <div class="marker"></div>
         </div>
       </div>
     </div>
@@ -61,7 +65,6 @@
 <script>
 import * as THREE from 'three';
 import PointerLockControls from 'three-pointerlock'
-import ColladaLoader from 'three-collada-loader'
 import CubeObject from './../views/CubeObject'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import Stats from 'stats.js'
@@ -468,11 +471,23 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
       height: 100%;
       width: 100%;
       opacity: 1;
       transition: 1s opacity;
       -webkit-animation:grow 4s infinite;
+      h4{
+        margin: 0;
+        padding: 0;
+        margin-top: 10px;
+        font-weight: bolder;
+        font-size: 20px;
+        letter-spacing: 1px;
+        color: #EFD15B;
+        font-family: Futura;
+        text-transform: uppercase;
+      }
       img{
         width: 50px;
       }
@@ -485,7 +500,7 @@ export default {
       background: linear-gradient(90deg,black,#EFD15B,  #EFD15B,#EFD15B, black);
       background-size: 400% 100%;
       width: 400%;
-      height: 15px;
+      height: 10px;
       background-repeat: no-repeat;
       -webkit-animation: AnimationName 5s ease infinite;
       -moz-animation: AnimationName 5s ease infinite;
@@ -505,9 +520,11 @@ export default {
     background-color: rgba(0,0,0,1);
     z-index: 2;
     transition: all 0.5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     #instructions {
-      width: 100%;
-      height: 100%;
       display: -webkit-flex;
       display: -moz-flex;
       display: flex;
@@ -516,7 +533,193 @@ export default {
       flex-direction: column;
       color: #ffffff;
       text-align: center;
+      span{
+        font-family: Diner, sans-serif;
+        font-size: 120px;
+        letter-spacing: 4px;
+        line-height: 1;
+        color: #EFD15B;
+      }
+      h4{
+        margin: 0;
+        padding: 0;
+        font-weight: bolder;
+        font-size: 20px;
+        letter-spacing: 1px;
+        color: #EFD15B;
+        font-family: Futura;
+        text-transform: uppercase;
+      }
+    }
+    .wrapper{
+      margin-top: 40px;
+      margin-bottom: 40px;
+      display: flex;
+      .map{
+        margin: 20px;
+        position: relative;
+        width: 62px;
+        height: 62px;
+        background: url("~@/assets/img/border.png");
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:hover .btn-gradient{
+          opacity: 1;
+        }
+        .btn-gradient{
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 62px;
+          height: calc(100% - 0px);
+          border: 2px solid;
+          -o-border-image: linear-gradient(180deg,white 0,#EFD15B 50%,#EFD15B) 2;
+          border-image: linear-gradient(180deg,white 0,#EFD15B 50%,#EFD15B) 2;
+          opacity: 0;
+          transition: opacity .3s ease-out;
+        }
+        img{
+          height: 25px;
+        }
+      }
+      .fullscreen{
+        margin: 20px;
+        position: relative;
+        width: 62px;
+        height: 62px;
+        background: url("~@/assets/img/border.png");
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:hover .btn-gradient{
+          opacity: 1;
+        }
+        .btn-gradient{
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 62px;
+          height: calc(100% - 0px);
+          border: 2px solid;
+          -o-border-image: linear-gradient(180deg,white 0,#EFD15B 50%,#EFD15B) 2;
+          border-image: linear-gradient(180deg,white 0,#EFD15B 50%,#EFD15B) 2;
+          opacity: 0;
+          transition: opacity .3s ease-out;
+        }
+      }
+      .sound{
+        margin: 20px;
+        position: relative;
+        width: 62px;
+        height: 62px;
+        background: url("~@/assets/img/border.png");
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:hover .btn-gradient{
+          opacity: 1;
+        }
+        .btn-gradient{
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 62px;
+          height: calc(100% - 0px);
+          border: 2px solid;
+          -o-border-image: linear-gradient(180deg,white 0,#EFD15B 50%,#EFD15B) 2;
+          border-image: linear-gradient(180deg,white 0,#EFD15B 50%,#EFD15B) 2;
+          opacity: 0;
+          transition: opacity .3s ease-out;
+        }
+      }
+      .lock{
+        margin: 20px;
+        position: relative;
+        width: 62px;
+        height: 62px;
+        background: url("~@/assets/img/border.png");
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:hover .btn-gradient{
+          opacity: 1;
+        }
+        .btn-gradient{
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 62px;
+          height: calc(100% - 0px);
+          border: 2px solid;
+          -o-border-image: linear-gradient(180deg,white 0,#EFD15B 50%,#EFD15B) 2;
+          border-image: linear-gradient(180deg,white 0,#EFD15B 50%,#EFD15B) 2;
+          opacity: 0;
+          transition: opacity .3s ease-out;
+        }
+      }
+    }
+    .start-button{
       cursor: pointer;
+      position: relative;
+      display: inline-block;
+      height: 50px;
+      box-sizing: border-box;
+      text-align: left;
+      &:hover .start-button-label{
+        color: white;
+      }
+      &:hover .button-gradient{
+        opacity: 1;
+      }
+      .left-bracket{
+        background: url("~@/assets/bracket2.png");
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+        display: inline-block;
+        width: 22px;
+        height: 50px;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+      .start-button-label{
+        position: relative;
+        top: -18px;
+        display: inline-block;
+        color: #EFD15B;
+        font-size: 20px;
+        letter-spacing: 2px;
+        width: 200px;
+        text-align: center;
+        line-height: 50px;
+        height: 100%;
+        transition: color .3s ease-out;
+      }
+      .right-bracket{
+        background: url("~@/assets/bracket2.png");
+        display: inline-block;
+        width: 22px;
+        height: 50px;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+      .button-gradient{
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin-left: 2px;
+        width: 241px;
+        height: calc(100% - 0px);
+        border: 2px solid;
+        -o-border-image: linear-gradient(180deg,white 0,#EFD15B 50%,#EFD15B) 2;
+        border-image: linear-gradient(180deg,white 0,#EFD15B 50%,#EFD15B) 2;
+        opacity: 0;
+        transition: opacity .3s ease-out;
+      }
     }
   }
   .controls {
@@ -528,95 +731,78 @@ export default {
     padding: 0;
   }
   .container{
-    .wrapper{
-      margin: 40px;
-      .left-down{
-        position: fixed;
+    .center-down{
+      position: fixed;
+      bottom: 0;
+      margin: auto;
+      left: calc(50% - 20px);
+      margin-bottom: 20px;
+      .mouse {
         bottom: 0;
-        left: 0;
+        width: 40px;
+        height: 60px;
+        border-radius: 20px;
+        border: 3px solid #EFD15B;
       }
-      .right-down{
-        position: fixed;
-        bottom: 0;
-        right: 0;
+      .mouse:before, .mouse:after {
+        content: "";
+        display: block;
+        position: absolute;
       }
-      .top-right{
-        position: fixed;
+      /* Second */
+      .m-1:before {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        top: 10px;
+        left: calc(50% - 5px);
+        background: #EFD15B;
+        -webkit-animation: m-1-ball 1.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+                animation: m-1-ball 1.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+      }
+    }
+    .center{
+      .marker{
+        width:50px;
+        height: 50px;
+        // background: red;
+        position: absolute;
         top: 0;
+        left: 0;
         right: 0;
-      }
-      .center-down{
-        position: fixed;
         bottom: 0;
         margin: auto;
-        left: calc(50% - 20px);
-        .mouse {
-          bottom: 0;
-          width: 40px;
-          height: 60px;
-          border-radius: 20px;
-          border: 3px solid #EFD15B;
-        }
-        .mouse:before, .mouse:after {
-          content: "";
-          display: block;
+        z-index: 1;
+        display: flex;
+        &:before, &:after{
           position: absolute;
+          content: '';
         }
-        /* Second */
-        .m-1:before {
-          width: 10px;
-          height: 10px;
-          border-radius: 50%;
-          top: 10px;
-          left: calc(50% - 5px);
-          background: #EFD15B;
-          -webkit-animation: m-1-ball 1.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-                  animation: m-1-ball 1.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-        }
-      }
-      .center{
-        .marker{
-          width:50px;
+        &:before{
+          /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#efd15b+0,efd15b+100&1+0,0+40,0+60,1+100 */
+          background: -moz-linear-gradient(top,  rgba(239,209,91,1) 0%, rgba(239,209,91,0) 40%, rgba(239,209,91,0) 60%, rgba(239,209,91,1) 100%); /* FF3.6-15 */
+          background: -webkit-linear-gradient(top,  rgba(239,209,91,1) 0%,rgba(239,209,91,0) 40%,rgba(239,209,91,0) 60%,rgba(239,209,91,1) 100%); /* Chrome10-25,Safari5.1-6 */
+          background: linear-gradient(to bottom,  rgba(239,209,91,1) 0%,rgba(239,209,91,0) 40%,rgba(239,209,91,0) 60%,rgba(239,209,91,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+          filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#efd15b', endColorstr='#efd15b',GradientType=0 ); /* IE6-9 */
           height: 50px;
-          // background: red;
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          margin: auto;
-          z-index: 1;
-          display: flex;
-          &:before, &:after{
-            position: absolute;
-            content: '';
-          }
-          &:before{
-            /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#efd15b+0,efd15b+100&1+0,0+40,0+60,1+100 */
-            background: -moz-linear-gradient(top,  rgba(239,209,91,1) 0%, rgba(239,209,91,0) 40%, rgba(239,209,91,0) 60%, rgba(239,209,91,1) 100%); /* FF3.6-15 */
-            background: -webkit-linear-gradient(top,  rgba(239,209,91,1) 0%,rgba(239,209,91,0) 40%,rgba(239,209,91,0) 60%,rgba(239,209,91,1) 100%); /* Chrome10-25,Safari5.1-6 */
-            background: linear-gradient(to bottom,  rgba(239,209,91,1) 0%,rgba(239,209,91,0) 40%,rgba(239,209,91,0) 60%,rgba(239,209,91,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#efd15b', endColorstr='#efd15b',GradientType=0 ); /* IE6-9 */
-            height: 50px;
-            width: 2px;
-            margin:auto;
-            position:absolute;
-            left:0;right:0;
-          }
-          &:after{
-            width:50px;
-            background: -moz-linear-gradient(left,  rgba(239,209,91,1) 0%, rgba(239,209,91,0) 40%, rgba(239,209,91,0) 60%, rgba(239,209,91,1) 100%); /* FF3.6-15 */
-            background: -webkit-linear-gradient(left,  rgba(239,209,91,1) 0%,rgba(239,209,91,0) 40%,rgba(239,209,91,0) 60%,rgba(239,209,91,1) 100%); /* Chrome10-25,Safari5.1-6 */
-            background: linear-gradient(to right,  rgba(239,209,91,1) 0%,rgba(239,209,91,0) 40%,rgba(239,209,91,0) 60%,rgba(239,209,91,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#efd15b', endColorstr='#efd15b',GradientType=1 ); /* IE6-9 */
-            height:2px;
-            margin:auto;
-            position:absolute;
-            top:0;bottom:0;
-          }
+          width: 2px;
+          margin:auto;
+          position:absolute;
+          left:0;right:0;
+        }
+        &:after{
+          width:50px;
+          background: -moz-linear-gradient(left,  rgba(239,209,91,1) 0%, rgba(239,209,91,0) 40%, rgba(239,209,91,0) 60%, rgba(239,209,91,1) 100%); /* FF3.6-15 */
+          background: -webkit-linear-gradient(left,  rgba(239,209,91,1) 0%,rgba(239,209,91,0) 40%,rgba(239,209,91,0) 60%,rgba(239,209,91,1) 100%); /* Chrome10-25,Safari5.1-6 */
+          background: linear-gradient(to right,  rgba(239,209,91,1) 0%,rgba(239,209,91,0) 40%,rgba(239,209,91,0) 60%,rgba(239,209,91,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+          filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#efd15b', endColorstr='#efd15b',GradientType=1 ); /* IE6-9 */
+          height:2px;
+          margin:auto;
+          position:absolute;
+          top:0;bottom:0;
         }
       }
-    } 
+    }
   }
 }
 .fade-enter-active, .fade-leave-active {
