@@ -205,7 +205,6 @@ export default {
       loader.load('/blender/room.glb', gltf => {
       // loader.load('/blender/room_1.glb', gltf => {
           this.scene.add(gltf.scene)
-          // gltf.scene.rotation.y = 180
           gltf.scene.position.set(0, 15, 0)
           gltf.scene.scale.set(8, 8, 8)
         },
