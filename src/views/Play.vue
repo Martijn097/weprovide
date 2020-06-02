@@ -1,5 +1,6 @@
 <template>
   <div class="play">
+    <audio ref="audioElm" src="/blender/music.mp3" autoplay loop></audio>
     <section id="loading-screen">
       <div id="loader"></div>
       <div class="lock">
@@ -29,7 +30,7 @@
           <div class="btn-gradient"></div>
           <img src="~@/assets/img/minimize.svg" alt="Fullscreen">
         </div>
-        <div class="sound">
+        <div v-on:click="playPause" class="sound">
           <div class="btn-gradient"></div>
           <img src="~@/assets/img/speaker.svg" alt="Sound">
         </div>
@@ -102,6 +103,9 @@ export default {
       loadingScreen: undefined,
       loadingManager: null,
       elem: null,
+      cube: undefined,
+      track: document.getElementById('track'),
+      controlBtn: document.getElementById('play-pause'),
 
       moveForward: false,
       moveBackward: false,
@@ -199,6 +203,7 @@ export default {
     initCreateHouse () {
       const loader = new GLTFLoader(this.loadingManager)
       loader.load('/blender/room.glb', gltf => {
+      // loader.load('/blender/room_1.glb', gltf => {
           this.scene.add(gltf.scene)
           // gltf.scene.rotation.y = 180
           gltf.scene.position.set(0, 15, 0)
@@ -214,12 +219,12 @@ export default {
       );
     },
     initCube () {
-      var cube = this.scene.getObjectByName("Cube");
-      cube = new CubeObject(20, 20, 20)
+      this.cube = this.scene.getObjectByName("Cube");
+      this.cube = new CubeObject(20, 20, 20)
         .create()
         .setPosition(10,10,10)
         
-      let mesh = cube.mesh;
+      let mesh = this.cube.mesh;
 
       this.scene.add(mesh);
       this.objects.push(mesh);
@@ -404,6 +409,32 @@ export default {
         } else if (document.webkitExitFullscreen) {
           document.webkitExitFullscreen();
         }
+      }
+    },
+    playPause () {
+      var a = this.$refs.audioElm;
+      if (a.paused) {
+        a.play();
+      } else {
+        a.pause();
+      }
+    },
+    cubeColorChange (){
+      // Welcome to the exciting world of raycasting !
+      // First let's get some mouse coordinates:
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      // This is basically converting 2d coordinates to 3d Space:
+      this.raycaster.setFromCamera(mouse, this.camera);
+      // And checking if it intersects with an array object
+      var intersects = raycaster.intersectObjects([this.cube]);
+      
+      // does your cursor intersect the object on click ? 
+      console.log(intersects.length > 0 ? "yes" : "no");
+      
+      // And finally change the color:
+      if (intersects.length > 0) {
+        intersects[0].object.material.color.setHex(Math.random() * 0xffffff);
       }
     }
   },
