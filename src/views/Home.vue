@@ -18,8 +18,10 @@
         <div class="landings-company">WeProvide</div>
         <div class="landings-message">Escape Room</div>
         <div class="landings-message-text">
-        Je wordt wakker in een oude salon bar. Je hebt geen idee hoe je er terecht bent gekomen. Eén ding weet je zeker, ik moet hier wegkomen. <br><br>
-        Met behulp van jouw kennis op het gebied van webdevelopment kun je een poging wagen om te ontsnappen. ...Lukt jou het?
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod officiis, blanditiis hic minima itaque nobis placeat voluptates 
+          soluta quisquam quo dolore earum eum maiores. Aut, expedita rerum. Odit, sint velit!
+        <!--Je wordt wakker in een oude salon bar. Je hebt geen idee hoe je er terecht bent gekomen. Eén ding weet je zeker, ik moet hier wegkomen. <br><br>
+        Met behulp van jouw kennis op het gebied van webdevelopment kun je een poging wagen om te ontsnappen. ...Lukt jou het?-->
         </div>
         <div class="landings-key">
           <img src="~@/assets/img/key.png" alt="key">

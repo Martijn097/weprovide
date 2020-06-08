@@ -1,6 +1,6 @@
 <template>
   <div class="play">
-    <audio ref="audioElm" src="/blender/music.mp3" autoplay loop></audio>
+    <audio ref="audioElm" src="/blender/music.mp3" loop></audio>
     <section id="loading-screen">
       <div id="loader"></div>
       <div class="lock">
@@ -8,15 +8,23 @@
         <h4>Loading</h4>
       </div>
     </section>
-    <!-- <NewMessage :name="name" :jobs="jobs" />
-    <li v-for="message in messages" :key="message.id">
-      <span>{{ message.name }}</span>
-      <span>{{ message.jobs }}</span>
-      <span>{{ message.content }}</span>
-      <span>{{ message.timestamp }}</span>
-    </li> -->
+
     <transition name="fade">
-    <div id="blocker" ref="blocker" v-show="!controlsEnabled">
+    <div id="blocker" ref="blocker" v-show="!controlsEnabled" >
+      <div class="popup-wrapper">
+        <div class="popup">
+          <div class="popup-text">
+            <NewMessage :name="name" :jobs="jobs" />
+            <li v-for="message in messages" :key="message.id">
+              <span>{{ message.name }}</span>
+              <span>{{ message.jobs }}</span>
+              <span>{{ message.content }}</span>
+              <span>{{ message.timestamp }}</span>
+            </li>
+          </div>
+        </div>
+      </div>
+
 			<div id="instructions" ref="instructions">
 				<span>Escape Room</span>
         <h4>Menu</h4>
@@ -28,11 +36,13 @@
         </div>
         <div @click="openFullscreen" class="fullscreen">
           <div class="btn-gradient"></div>
-          <img src="~@/assets/img/minimize.svg" alt="Fullscreen">
+          <img v-bind:style="styleObjectFullscreenOn" class="fullscreen-on" src="~@/assets/img/fullscreen.svg" alt="Fullscreen">
+          <img v-bind:style="styleObjectFullscreenOff" class="fullscreen-off" src="~@/assets/img/minimize.svg" alt="Minimize">
         </div>
         <div v-on:click="playPause" class="sound">
           <div class="btn-gradient"></div>
-          <img src="~@/assets/img/speaker.svg" alt="Sound">
+          <img v-bind:style="styleObjectSoundOn" class="sound-on" src="~@/assets/img/speaker.svg" alt="Sound">
+          <img v-bind:style="styleObjectSoundOff" class="sound-off" src="~@/assets/img/sound_off.png" alt="Sound Off">
         </div>
         <div class="lock">
           <div class="btn-gradient"></div>
@@ -67,6 +77,7 @@
 import * as THREE from 'three';
 import PointerLockControls from 'three-pointerlock'
 import CubeObject from './../views/CubeObject'
+import WallObject from './../views/WallObject'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import Stats from 'stats.js'
 
@@ -96,6 +107,9 @@ export default {
       controls: undefined,
       objects: [],
       raycaster: undefined,
+      playerspeed: undefined,
+      playercollisiondistance: undefined,
+      playerVelocity: undefined,
       blocker: undefined,
       instructions: undefined,
       havePointerLock: undefined,
@@ -104,14 +118,32 @@ export default {
       loadingManager: null,
       elem: null,
       cube: undefined,
+      wall: undefined,
+      mouse: undefined,
+      group: undefined,
+      walls: [],
+      wallMesh: [],
+      cubeMesh: [],
+      INTERSECTED: null,
       track: document.getElementById('track'),
       controlBtn: document.getElementById('play-pause'),
+      styleObjectSoundOn: {
+        display: 'none'
+      },
+      styleObjectSoundOff: {
+        display: 'block'
+      },
+      styleObjectFullscreenOn: {
+        display: 'block'
+      },
+      styleObjectFullscreenOff: {
+        display: 'none'
+      },
 
       moveForward: false,
       moveBackward: false,
       moveLeft: false,
       moveRight: false,
-      canJump: false,
       sprinting: false,
       moveY: 0,
 
@@ -139,26 +171,42 @@ export default {
   },
   methods: {
     init () {
-      this.camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 1000);
+      // Setup camera
+      this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
       this.camera.position.set(0, 30, 0);
-      console.log(this.camera.position);
+
+      // Setup scene
       this.scene = new THREE.Scene();
       this.scene.fog = new THREE.Fog(0xffffff, 0, 750);
 
+      // Setup light
       let light = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.75);
       light.position.set(0.5, 1, 0.75);
       this.scene.add(light);
 
+      // Setup controls
       this.controls = new PointerLockControls(this.camera);
       this.scene.add(this.controls.getObject());
 
-      document.addEventListener('wheel', this.onScrollWheel, false);
+      // Add eventlisteners movement
       document.addEventListener( 'keydown', this.onKeyDown, false );
       document.addEventListener( 'keyup', this.onKeyUp, false );
+      // If you want to use mousewheel instead of keys
+      // document.addEventListener('wheel', this.onScrollWheel, false);
 
-      this.raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10);
+      // Add eventlistener click interaction 3D object
+      document.addEventListener('mousedown', this.onDocumentMouseDown, false);
+
+      // Add eventlisteren responsive
+      window.addEventListener('resize', this.onWindowResize, false);
+
+      //  Mouse interaction for raycaster
+      this.mouse ={x: 0, y: 0}
       
-      // loading manager
+      // Setup raycaster
+      this.raycaster = new THREE.Raycaster();
+      
+      // Setup loading manager
       this.loadingManager = new THREE.LoadingManager( () => {
         // if loaded fade out loading screen
         this.loadingScreen = document.getElementById( 'loading-screen' );
@@ -168,11 +216,18 @@ export default {
       } );
 
       // this.moveObjectA();
+
+      // initialise 3D Objects
       this.initCreateGround();
       this.initCreateHouse();
       this.initCube();
+      this.initWallNorth();
+      this.initWallSouth();
+      this.initWallWest();
+      this.initWallEast();
+
+      // Render to the scene
       this.initRenderer();
-      window.addEventListener('resize', this.onWindowResize, false);
     },
     initRenderer () {
       this.renderer = new THREE.WebGLRenderer();
@@ -221,12 +276,166 @@ export default {
       this.cube = this.scene.getObjectByName("Cube");
       this.cube = new CubeObject(20, 20, 20)
         .create()
-        .setPosition(10,10,10)
+        .setPosition(0,10,-80)
         
-      let mesh = this.cube.mesh;
+      this.cubeMesh = this.cube.cubeMesh;
 
-      this.scene.add(mesh);
-      this.objects.push(mesh);
+      this.scene.add(this.cubeMesh);
+      this.objects.push(this.cubeMesh);
+    },
+    initWallNorth () {
+      this.group = new THREE.Group();
+      this.wall = this.scene.getObjectByName("Wall");
+      this.wall = new WallObject(300, 100, 10)
+        .create()
+        .setPosition(-50,10,-160)
+      
+      this.wallMesh = this.wall.wallMesh;
+      this.group.add(this.wallMesh);
+      this.walls.push(this.group);
+      this.scene.add(this.group);
+    },
+    initWallSouth () {
+      this.wall = this.scene.getObjectByName("Wall");
+      this.wall = new WallObject(300, 100, 10)
+        .create()
+        .setPosition(-50,10,105)
+        
+      this.wallMesh = this.wall.wallMesh;
+      this.group.add(this.wallMesh);
+      this.walls.push(this.group);
+      this.scene.add(this.group);
+    },
+    initWallWest () {
+      this.wall = this.scene.getObjectByName("Wall");
+      this.wall = new WallObject(10, 100, 300)
+        .create()
+        .setPosition(-120,10,0)
+        
+      this.wallMesh = this.wall.wallMesh;
+      this.group.add(this.wallMesh);
+      this.walls.push(this.group);
+      this.scene.add(this.group);
+    },
+    initWallEast () {
+      this.wall = this.scene.getObjectByName("Wall");
+      this.wall = new WallObject(10, 100, 300)
+        .create()
+        .setPosition(100,10,0)
+        
+      this.wallMesh = this.wall.wallMesh;
+      this.group.add(this.wallMesh);
+      this.walls.push(this.group);
+      this.scene.add(this.group);
+    },
+    onDocumentMouseDown (){
+      this.raycaster.setFromCamera( this.mouse, this.camera );
+      var intersects = this.raycaster.intersectObjects([this.cubeMesh]);
+
+      if (intersects.length > 0) {
+        intersects[0].object.material.color.setHex(Math.random() * 0xffffff);
+    
+        var popupText = document.getElementsByClassName("popup-text");
+        var popup = document.getElementsByClassName("popup");
+        while(popupText.firstChild) wrap.removeChild(popupText.firstChild);
+
+        var popup = document.querySelector(".popup"); // Element into which appending will be done
+        popup.style.display = 'block'; // show
+
+        document.exitPointerLock();
+
+      }
+    },
+    animatePlayer(delta){
+      // Gradual slowdown
+      this.playerspeed = 2000.0;
+      this.playerVelocity = new THREE.Vector3();
+      this.playerVelocity.x -= this.playerVelocity.x * 10.0 * delta;
+      this.playerVelocity.z -= this.playerVelocity.z * 10.0 * delta;
+
+      // Mousewheel interaction
+      // this.playerVelocity.z += (this.moveY * 10.0 * delta)
+      // this.controls.getObject().position.z += this.playerVelocity.z * delta;
+      // this.moveY = 0;
+
+      // If no collision and a movement key is being pressed, apply movement velocity
+      if (this.detectPlayerCollision() == false) {
+        if (this.moveForward) {
+          this.playerVelocity.z -= this.playerspeed * delta;
+        }
+        if (this.moveBackward) {
+          this.playerVelocity.z += this.playerspeed * delta;
+        } 
+        if (this.moveLeft) {
+          this.playerVelocity.x -= this.playerspeed * delta;
+        }
+        if (this.moveRight) {
+          this.playerVelocity.x += this.playerspeed * delta;
+        }
+
+        this.controls.getObject().translateX(this.playerVelocity.x * delta);
+        this.controls.getObject().translateZ(this.playerVelocity.z * delta);
+      } else {
+        // Collision or no movement key being pressed. Stop movememnt
+        this.playerVelocity.x = 0;
+        this.playerVelocity.z = 0;
+      }
+    },
+    detectPlayerCollision(){
+      // The rotation matrix to apply to our direction vector
+      // Undefined by default to indicate ray should coming from front
+      var rotationMatrix;
+      // How many units away the player can get from the wall
+      this.playercollisiondistance = 40; 
+      // Get direction of camera
+      var cameraDirection = this.controls.getDirection(new THREE.Vector3(0, 0, 0)).clone();
+
+      // Check which direction we're moving (not looking)
+      // Flip matrix to that direction so that we can reposition the ray
+      if (this.moveBackward) {
+          rotationMatrix = new THREE.Matrix4();
+          rotationMatrix.makeRotationY(this.degreesToRadians(180));
+      }
+      else if (this.moveLeft) {
+          rotationMatrix = new THREE.Matrix4();
+          rotationMatrix.makeRotationY(this.degreesToRadians(90));
+      }
+      else if (this.moveRight) {
+          rotationMatrix = new THREE.Matrix4();
+          rotationMatrix.makeRotationY(this.degreesToRadians(270));
+      }
+
+      // Player is moving forward, no rotation matrix needed
+      if (rotationMatrix !== undefined) {
+          cameraDirection.applyMatrix4(rotationMatrix);
+      }
+
+      // Apply ray to player camera
+      var playerRaycaster = new THREE.Raycaster(this.controls.getObject().position, cameraDirection);
+
+      // If our ray hit a collidable object, return true
+      if (this.rayIntersect(playerRaycaster, this.playercollisiondistance)) {
+          return true;
+      } else {
+          return false;
+      }
+    },
+    rayIntersect(ray, distance) {
+      var intersectWall = ray.intersectObjects(this.walls, true);
+      for (var i = 0; i < intersectWall.length; i++) {
+        if (intersectWall[i].distance < distance) {
+            return true;
+        }
+      }
+      return false;
+    },
+    // Converts degrees to radians
+    degreesToRadians(degrees) {
+        return degrees * Math.PI / 180;
+    },
+    // Converts radians to degrees
+    radiansToDegrees(radians) {
+        return radians * 180 / Math.PI;
     },
     animate () {
       requestAnimationFrame(this.animate);
@@ -234,41 +443,24 @@ export default {
         let time = performance.now();
         let delta = ( time - this.prevTime ) / 1000;
 
-        this.velocity.x -= this.velocity.x * 10.0 * delta;
-        this.velocity.z -= this.velocity.z * 10.0 * delta;
-        this.velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+        this.animatePlayer (delta) ;
 
-        this.handleInput (delta) 
-
-        if ( this.controls.getObject().position.y < 10 ) {
-          this.velocity.y = 0;
-          this.controls.getObject().position.y = 10;
-          this.canJump = true;
-        }
         this.prevTime = time;
+      } else {
+        // Prevent Player from continuing if esc and move at the same time
+        this.velocity.x = 0;
+        this.velocity.z = 0;
+        this.moveForward = false;
+        this.moveBackward = false;
+        this.moveLeft = false;
+        this.moveRight = false;
+        this.moveY = false;
       }
 
       this.renderer.render( this.scene, this.camera );
     },
     onTransitionEnd( event ) {
       event.target.remove();
-    },
-    handleInput (delta) {
-      this.velocity.z += (this.moveY * 10.0 * delta)
-      this.controls.getObject().position.z += this.velocity.z * delta;
-      this.moveY = 0;
-
-      // this.velocity.z += (this.zInput * 400.0 * delta) * (this.sprinting ? 2 : 1);
-      // this.velocity.x += (this.xInput * 400.0 * delta);
-
-      // if ( this.isOnObject() === true ) {
-      //     this.velocity.y = Math.max( 0, this.velocity.y );
-      //     this.canJump = true;
-      // }
-
-      // this.controls.getObject().translateX( this.velocity.x * delta );
-      // this.controls.getObject().translateY( this.velocity.y * delta );
-      // this.controls.getObject().translateZ( this.velocity.z * delta );
     },
     movePosition (x, y, z) {
       this.controls.getObject().position.x = x;
@@ -277,6 +469,12 @@ export default {
     },
     onKeyDown (event) {
       switch ( event.keyCode ) {
+        case 27: 
+          this.moveForward = false;
+          this.moveBackward = false;
+          this.moveLeft = false;
+          this.moveRight = false;
+          break
         case 38: // up
         case 87: // w
           this.moveForward = true;
@@ -293,16 +491,10 @@ export default {
         case 68: // d
           this.moveRight = true;
           break;
-        case 32: // space
-          if ( this.canJump === true ) {
-              this.velocity.y += 350;
-          }
-          this.canJump = false;
-          break;
         case 16:
           this.sprinting = true;
           break;
-      }
+      } 
     },
     onKeyUp (event) {
       switch( event.keyCode ) {
@@ -352,16 +544,23 @@ export default {
     pointerlockchange () {
       if ( document.pointerLockElement === this.element || document.mozPointerLockElement === this.element || document.webkitPointerLockElement === this.element ) {
         this.controls.enabled = true;
+        console.log('controls aan');
+        // styling fullscreen button
+        this.styleObjectFullscreenOn.display = 'none';
+        this.styleObjectFullscreenOff.display = 'block';
       } else {
         this.controls.enabled = false;
+        console.log('controls uit');
+        // styling fullscreen button 
+        this.styleObjectFullscreenOn.display = 'block';
+        this.styleObjectFullscreenOff.display = 'none';
       }
     },
     pointerlockerror () {
-        // this.instructions.style.display = '';
+        this.instructions.style.display = '';
     },
     clickOnInstructions () {
       // this.instructions.style.display = 'none';
-
       this.element.requestPointerLock = this.element.requestPointerLock || this.element.mozRequestPointerLock || this.element.webkitRequestPointerLock;
 
       if (/Firefox/i.test(navigator.userAgent)) {
@@ -381,15 +580,13 @@ export default {
       }
     },
     openFullscreen (){
-      this.elem = document.getElementById("map");
       this.elem = document.documentElement;
-      // this.elem.addEventListener("click", this.openFullscreen, false);
-
-      // this.elem.innerHTML = "Exit Fullscreen";
-      if (!document.fullscreenElement &&    // alternative standard method
-          !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
+      this.styleObjectFullscreenOn.display = 'none'
+      this.styleObjectFullscreenOff.display = 'block'
+      if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  
+                  // document.addEventListener( 'fullscreenchange', this.openFullscreen, false );
         if (document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen();
+          document.documentElement.requestFullscreen();       
         } else if (document.documentElement.msRequestFullscreen) {
           document.documentElement.msRequestFullscreen();
         } else if (document.documentElement.mozRequestFullScreen) {
@@ -398,8 +595,10 @@ export default {
           document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
         }
       } else {
-        // this.elem.innerHTML = "Fullscreen"
+        this.styleObjectFullscreenOn.display = 'block'
+        this.styleObjectFullscreenOff.display = 'none'
         if (document.exitFullscreen) {
+          // document.removeEventListener( 'fullscreenchange', this.openFullscreen );
           document.exitFullscreen();
         } else if (document.msExitFullscreen) {
           document.msExitFullscreen();
@@ -413,29 +612,15 @@ export default {
     playPause () {
       var a = this.$refs.audioElm;
       if (a.paused) {
-        a.play();
+        a.play();     
+        this.styleObjectSoundOn.display = 'block'
+        this.styleObjectSoundOff.display = 'none'
       } else {
         a.pause();
+        this.styleObjectSoundOn.display = 'none'
+        this.styleObjectSoundOff.display = 'block'
       }
     },
-    cubeColorChange (){
-      // Welcome to the exciting world of raycasting !
-      // First let's get some mouse coordinates:
-      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-      // This is basically converting 2d coordinates to 3d Space:
-      this.raycaster.setFromCamera(mouse, this.camera);
-      // And checking if it intersects with an array object
-      var intersects = raycaster.intersectObjects([this.cube]);
-      
-      // does your cursor intersect the object on click ? 
-      console.log(intersects.length > 0 ? "yes" : "no");
-      
-      // And finally change the color:
-      if (intersects.length > 0) {
-        intersects[0].object.material.color.setHex(Math.random() * 0xffffff);
-      }
-    }
   },
   computed: {
     controlsEnabled () {
@@ -444,9 +629,6 @@ export default {
       }
       return false;
     },
-    // aspectRatio () {
-    //   return window.innerWidth / window.innerHeight;
-    // },
     zInput () {
       let value = 0;
       value -= (this.moveForward ? 1 : 0);
@@ -469,8 +651,6 @@ export default {
     this.element = this.$refs.canvas;
     this.blocker = this.$refs.blocker;
     this.instructions = this.$refs.instructions;
-    const timeline = new TimelineLite()
-
     this.prevTime = performance.now();
     this.velocity = new THREE.Vector3();
       
@@ -487,31 +667,41 @@ export default {
     } else {
       this.instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
     }
-
-    // if (this.controls.enabled = true){
-
-    //   TweenLite.to(blocker, 1, {backgroundColor: red})
-
-    //   timeline.to(blocker, 1, {
-    //     delay: 4,
-    //     backgroundColor:"red",
-    //     ease: Power2.easeInOut 
-    //   })
-    // }
-    
-
-
   }
 }
 </script>
 
 <style lang="scss" scoped>
+canvas{
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
 .play{
   width: 100%;
 	height: 100%;
   background-color: #ffffff;
   margin: 0;
   overflow: hidden;
+  .popup-wrapper{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    .popup{
+      display: none;
+      z-index: 1;
+      width: 70%;
+      height: 70%;
+      background-color: white;
+      .popup-text{
+        color: red;
+      }
+    }
+  }
   #loading-screen {
     position: absolute;
     z-index: 16;
@@ -574,7 +764,7 @@ export default {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,1);
+    background-color: rgba(0,0,0,0.8);
     z-index: 2;
     transition: all 0.5s ease;
     display: flex;
@@ -654,6 +844,12 @@ export default {
         &:hover .btn-gradient{
           opacity: 1;
         }
+        .fullscreen-on{
+          display: block;
+        }
+        .fullscreen-off{
+          display: none;
+        }
         .btn-gradient{
           position: absolute;
           top: 0;
@@ -679,6 +875,13 @@ export default {
         align-items: center;
         &:hover .btn-gradient{
           opacity: 1;
+        }
+        .sound-on{
+          display: none;
+        }
+        .sound-off{
+          display: block;
+          width: 40px;
         }
         .btn-gradient{
           position: absolute;

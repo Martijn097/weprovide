@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-export default class CubeObject 
+export default class WallObject 
 {
   constructor(width, height, depth) {
     this.geometry = new THREE.BoxGeometry(width, height, depth);
@@ -23,23 +23,25 @@ export default class CubeObject
 
   setMaterial () {
     this.material = new THREE.MeshPhongMaterial({
-        specular: 0xffffff, 
-        flatShading: THREE.FlatShading, 
-        vertexColors: THREE.VertexColors 
+        // specular: 0xffffff, 
+        transparent: true,
+        opacity:0.1,
+        // flatShading: THREE.FlatShading, 
+        // vertexColors: THREE.VertexColors 
     });
-    this.material.color.setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
+    // this.material.color.setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
     return this;
   }
 
   setMesh () {
-    this.cubeMesh = new THREE.Mesh(this.geometry, this.material);
+    this.wallMesh = new THREE.Mesh(this.geometry, this.material);
     return this;
   }
 
   setPosition (x, y, z) {
-    this.cubeMesh.position.x = x;
-    this.cubeMesh.position.y = y;
-    this.cubeMesh.position.z = z;
+    this.wallMesh.position.x = x;
+    this.wallMesh.position.y = y;
+    this.wallMesh.position.z = z;
     return this;
   }
 
