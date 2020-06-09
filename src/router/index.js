@@ -51,16 +51,6 @@ const router = new VueRouter({
       }
     },
     {
-      path: '/testplay',
-      name: 'TestPlay',
-      component: () => import( '@/views/TestPlay')
-    },
-    {
-      path: '/play4',
-      name: 'Play4',
-      component: () => import( '@/views/Play4')
-    },
-    {
       path: '/login',
       name: 'Login',
       component: () => import( '@/components/auth/Login')
@@ -85,7 +75,6 @@ const router = new VueRouter({
     },
   ],
   mode: 'history',
-  // base: '/projects/tool/',
   router
 })
 

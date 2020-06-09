@@ -14,13 +14,17 @@
       <div class="popup-wrapper">
         <div class="popup">
           <div class="popup-text">
-            <NewMessage :name="name" :jobs="jobs" />
-            <li v-for="message in messages" :key="message.id">
+            <!-- <NewMessage :name="name" :jobs="jobs" /> -->
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat consectetur 
+              tenetur iste explicabo! Suscipit illo dolorem voluptas libero tempore labore temporibus, 
+              ratione sit vel ad, placeat, deleniti aliquam assumenda magnam!</p>
+            <!-- <li v-for="message in messages" :key="message.id">
               <span>{{ message.name }}</span>
               <span>{{ message.jobs }}</span>
               <span>{{ message.content }}</span>
               <span>{{ message.timestamp }}</span>
-            </li>
+            </li> -->
+            <button @click="clickOnClose">close</button>
           </div>
         </div>
       </div>
@@ -117,10 +121,12 @@ export default {
       loadingScreen: undefined,
       loadingManager: null,
       elem: null,
+      popup: undefined,
       cube: undefined,
       wall: undefined,
       mouse: undefined,
       group: undefined,
+      paper: [],
       walls: [],
       wallMesh: [],
       cubeMesh: [],
@@ -196,6 +202,7 @@ export default {
 
       // Add eventlistener click interaction 3D object
       document.addEventListener('mousedown', this.onDocumentMouseDown, false);
+      window.addEventListener( 'mousemove', this.onMouseMove, false );
 
       // Add eventlisteren responsive
       window.addEventListener('resize', this.onWindowResize, false);
@@ -218,8 +225,8 @@ export default {
       // this.moveObjectA();
 
       // initialise 3D Objects
-      this.initCreateGround();
-      this.initCreateHouse();
+      this.initCreateRoom();
+      this.initCreatePaper();
       this.initCube();
       this.initWallNorth();
       this.initWallSouth();
@@ -238,26 +245,9 @@ export default {
       this.renderer.setSize(window.innerWidth, window.innerHeight);
       this.element.appendChild(this.renderer.domElement);
     },
-    initCreateGround () {
+    initCreateRoom () {
       const loader = new GLTFLoader(this.loadingManager)
-      loader.load('/blender/grond.glb', gltf => {
-          this.scene.add(gltf.scene)
-          gltf.scene.position.set(0, 0, -100)
-          gltf.scene.scale.set(10, 10, 10)
-        },
-        function (xhr) {
-          console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-          
-        },
-        // called when loading has errors
-        function (error) {
-          console.log( 'An error happened' );
-        }
-      );
-    },
-    initCreateHouse () {
-      const loader = new GLTFLoader(this.loadingManager)
-      loader.load('/blender/room.glb', gltf => {
+      loader.load('/blender/escape_room.glb', gltf => {
       // loader.load('/blender/room_1.glb', gltf => {
           this.scene.add(gltf.scene)
           gltf.scene.position.set(0, 15, 0)
@@ -270,6 +260,20 @@ export default {
         function (error) {
           console.log( 'An error happened' );
         }
+      );
+    },
+    initCreatePaper () {
+      const loader = new GLTFLoader(this.loadingManager)
+      loader.load('/blender/paper.glb', gltf => {
+      // loader.load('/blender/room_1.glb', gltf => {
+          gltf.scene.position.set(-33, 12, -15)
+          gltf.scene.scale.set(5, 5, 5)
+
+          this.paper.push(gltf.scene);
+          this.scene.add(gltf.scene);
+          // this.objects.push(this.paper)
+
+        },
       );
     },
     initCube () {
@@ -330,20 +334,46 @@ export default {
     },
     onDocumentMouseDown (){
       this.raycaster.setFromCamera( this.mouse, this.camera );
-      var intersects = this.raycaster.intersectObjects([this.cubeMesh]);
+      var intersects = this.raycaster.intersectObjects(this.paper, true);
 
       if (intersects.length > 0) {
-        intersects[0].object.material.color.setHex(Math.random() * 0xffffff);
-    
-        var popupText = document.getElementsByClassName("popup-text");
-        var popup = document.getElementsByClassName("popup");
-        while(popupText.firstChild) wrap.removeChild(popupText.firstChild);
-
-        var popup = document.querySelector(".popup"); // Element into which appending will be done
-        popup.style.display = 'block'; // show
-
+        // intersects[0].object.material.color.setHex(Math.random() * 0xdec67a);
+        this.popup = document.querySelector(".popup-wrapper"); // Element into which appending will be done
+        this.popup.style.display = 'flex'; // show
         document.exitPointerLock();
+      }
+    },
+    onMouseMove (){
+      this.raycaster.setFromCamera( this.mouse, this.camera );
+      var intersects = this.raycaster.intersectObjects(this.paper, true);
 
+      // intersects[0].object.material.color.setHex(0xdec67a);
+
+      if (intersects.length > 0) {
+        if ( this.INTERSECTED != intersects[ 0 ].object ) {
+          if ( this.INTERSECTED ) this.INTERSECTED.material.color.setHex( this.INTERSECTED.currentHex );
+          this.INTERSECTED = intersects[ 0 ].object;
+          this.INTERSECTED.currentHex = this.INTERSECTED.material.color.getHex();
+          this.INTERSECTED.material.color.setHex( 0xdec67a );
+        }
+      } else {
+        if ( this.INTERSECTED ) this.INTERSECTED.material.color.setHex( this.INTERSECTED.currentHex );
+        this.INTERSECTED = null;
+      }
+    },
+    clickOnClose(){
+      setTimeout(() => { 
+        this.popup.style.display = 'none'; // hide
+      }, 1000);
+      this.element.requestPointerLock = this.element.requestPointerLock || this.element.mozRequestPointerLock || this.element.webkitRequestPointerLock;
+
+      if (/Firefox/i.test(navigator.userAgent)) {
+        document.addEventListener( 'fullscreenchange', this.fullscreenchange, false );
+        document.addEventListener( 'mozfullscreenchange', this.fullscreenchange, false );
+        this.element.requestFullscreen = this.element.requestFullscreen || this.element.mozRequestFullscreen || this.element.mozRequestFullScreen || this.element.webkitRequestFullscreen;
+        this.element.requestFullscreen();
+      } else {
+        this.element.requestPointerLock();
       }
     },
     animatePlayer(delta){
@@ -691,14 +721,55 @@ canvas{
     justify-content: center;
     align-items: center;
     position: absolute;
+    z-index: 2;
+    display: none;
     .popup{
-      display: none;
-      z-index: 1;
-      width: 70%;
+      width: 55%;
       height: 70%;
-      background-color: white;
+      background: #fafafa;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3), 0 0 300px 25px rgba(222,198,122,0.7) inset;
+      padding: 24px;
+      position: relative;
+      &:before, &:after{
+        content: "";
+        background: #fafafa;
+        box-shadow: 0 0 8px rgba(0,0,0,0.2), inset 0 0 300px rgba(222,198,122,0.7);
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        z-index: -2;
+        transition: .5s;
+      }
+      &:before{
+        left: -5px;
+        top: 2px;  
+        transform: rotate(-1.5deg);
+      }
+      &:after{
+        right: -3px;
+        top: 0px;
+        transform: rotate(2.4deg);
+      }
+      &:hover:before{
+        transform: rotate(0deg);
+        border: solid rgba(111,99,61,0.4);
+        border-width: 0px 0px 0px 1px;
+        left: -6px;
+        top: -6px; 
+      }
+      &:hover:after{
+        transform: rotate(0deg);
+        border: solid rgba(111,99,61,0.4);
+        border-width: 0px 0px 0px 1px;
+        right: 3px;
+        top: -3px;
+      }
       .popup-text{
-        color: red;
+        color: black;
+        font-family: Futura;
+        text-transform: uppercase;
+        font-size: 50px;
+        font-weight: bolder;
       }
     }
   }
@@ -1072,6 +1143,7 @@ canvas{
   opacity: 0;
 }
 
+// keyframes
 @-webkit-keyframes AnimationName {
   0%{background-position:0% 50%}
   50%{background-position:125% 50%}
@@ -1087,15 +1159,11 @@ canvas{
   50%{background-position:125% 50%}
   100%{background-position:0% 50%}
 }
-
-
 @-webkit-keyframes grow {
   0% {-webkit-transform: scale( 0.8 );-moz-transform: scale( 0.8 );-o-transform: scale( 0.8 );-ms-transform: scale( 0.8 );transform: scale( 0.8 );}
   50% {-webkit-transform: scale( 1 );-moz-transform: scale( 1 );-o-transform: scale( 1 );-ms-transform: scale( 1 );transform: scale( 1 );}
   100% {-webkit-transform: scale( 0.8 );-moz-transform: scale( 0.8 );-o-transform: scale( 0.8 );-ms-transform: scale( 0.8 );transform: scale( 0.8 );}
 }
-
-
 @-webkit-keyframes m-1-ball {
   0%, 65%, 100% {
     opacity: 0;
@@ -1120,7 +1188,6 @@ canvas{
             transform: translateY(24px) scale(0.7);
   }
 }
-
 @keyframes m-1-ball {
   0%, 65%, 100% {
     opacity: 0;

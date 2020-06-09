@@ -276,9 +276,11 @@ export default {
     }
   }
   .radio-toolbar{
-    margin: 0 auto;
-    margin-top: 16rem;
-    width: 800px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     opacity: 0;
     transition: opacity 0.5s linear;
     .radio-button {
@@ -297,6 +299,7 @@ export default {
       }
     }
     .jobs-offers{
+      width: 800px;
       display: flex;
       justify-content: space-between;
       input[type="radio"]{
@@ -477,8 +480,6 @@ export default {
     }
     .radio-toolbar{
       width: 100%;
-      margin: 0 auto;
-      margin-top: 12em;
       .radio-button {
       }
       .jobs-title{
@@ -566,7 +567,6 @@ export default {
       }
     }
     .radio-toolbar{
-      margin-top: 12em;
       .radio-button {
       }
       .jobs-title{
@@ -653,7 +653,6 @@ export default {
       }
     }
     .radio-toolbar{
-      margin-top: 8em;
       .radio-button {
       }
       .jobs-title{
@@ -740,7 +739,6 @@ export default {
       }
     }
     .radio-toolbar{
-      margin-top: 6em;
       .radio-button {
       }
       .jobs-title{
@@ -843,7 +841,6 @@ export default {
       }
     }
     .radio-toolbar{
-      margin-top: 6em;
       .radio-button {
       }
       .jobs-title{

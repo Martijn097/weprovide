@@ -306,7 +306,166 @@ export default {
   }
 }
 //MEDIA QUERIES
-@media only screen and (max-width: 1024px) {
+@media only screen and (min-width: 1900px) {
+  .home{
+    .landings-content{
+      margin: 120px;
+      width: 70%;
+      .landings-top{
+        .landings-lightbulb{
+          img{
+            margin-top: -360px;
+            width: 100px;
+          }
+        }
+      }
+      .landings-middle{
+        .landings-company{
+          margin-bottom: 60px;
+          font-size: 30px;
+          &:before{
+            margin-left: -17px;
+            margin-top: 9px;
+          }
+          &:after{
+            margin-left: 116px;
+            margin-top: -17px;
+          }
+        }
+        .landings-message{
+          font-size: 140px;
+        }
+        .landings-message-text{
+          font-size: 22px;
+          line-height: 26px;
+          width: 50%;
+          margin-top: 60px;
+          margin-bottom: 0px;
+        }
+        .landings-key{
+          img{
+            width: 600px;
+          }
+        }
+      }
+      .landings-bottom{
+        margin-top: 60px;
+        .social-media{
+          a{
+            img{
+              &:hover{
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 
+@media only screen and (max-width: 1600px) {
+  .home{
+    .landings-content{
+      margin: 120px;
+      width: 70%;
+      .landings-top{
+        .landings-lightbulb{
+          img{
+            margin-top: -280px;
+            width: 90px;
+          }
+        }
+      }
+      .landings-middle{
+        .landings-company{
+          font-size: 26px;
+          &:before{
+            margin-left: -17px;
+            margin-top: 9px;
+          }
+          &:after{
+            margin-left: 116px;
+            margin-top: -17px;
+          }
+        }
+        .landings-message{
+          font-size: 130px;
+        }
+        .landings-message-text{
+          font-size: 20px;
+          line-height: 24px;
+          width: 800px;
+        }
+        .landings-key{
+          img{
+            width: 500px;
+          }
+        }
+      }
+      .landings-bottom{
+        .social-media{
+          a{
+            img{
+              &:hover{
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 
+@media only screen and (max-width: 1400px) {
+  .home{
+    .landings-content{
+      margin: 120px;
+      .landings-top{
+        .landings-lightbulb{
+          img{
+            margin-top: -280px;
+            width: 84px;
+          }
+        }
+      }
+      .landings-middle{
+        .landings-company{
+          font-size: 26px;
+          &:before{
+            margin-left: -17px;
+            margin-top: 9px;
+          }
+          &:after{
+            margin-left: 116px;
+            margin-top: -17px;
+          }
+        }
+        .landings-message{
+          font-size: 120px;
+        }
+        .landings-message-text{
+          font-size: 18px;
+          line-height: 22px;
+          width: 700px;
+        }
+        .landings-key{
+          img{
+            width: 500px;
+          }
+        }
+      }
+      .landings-bottom{
+        .social-media{
+          a{
+            img{
+              &:hover{
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 1200px) {
   .home{
     .landings-content{
       .landings-top{
@@ -355,13 +514,65 @@ export default {
     }
   }
 }
-
+@media only screen and (max-width: 1024px) {
+  .home{
+    .landings-content{
+      .landings-top{
+        .landings-lightbulb{
+          display: none;
+          img{
+            width: 80px;
+          }
+        }
+      }
+      .landings-middle{
+        .landings-company{
+          font-size: 26px;
+          &:before{
+            margin-left: -17px;
+            margin-top: 9px;
+          }
+          &:after{
+            margin-left: 116px;
+            margin-top: -17px;
+          }
+        }
+        .landings-message{
+          font-size: 100px;
+        }
+        .landings-message-text{
+          font-size: 14px;
+          line-height: 18px;
+          width: 500px;
+        }
+        .landings-key{
+          display: none;
+          img{
+            width: 400px;
+          }
+        }
+      }
+      .landings-bottom{
+        margin-top: 100px;
+        .social-media{
+          a{
+            img{
+              &:hover{
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 @media only screen and (max-width: 768px) {
   .home{
     .landings-content{
       margin: 60px;
       .landings-top{
         .landings-lightbulb{
+          display: none;
           img{
             width: 50px;
           }
@@ -417,6 +628,7 @@ export default {
       margin: 40px;
       .landings-top{
         .landings-lightbulb{
+          display: none;
           img{
             width: 50px;
           }
