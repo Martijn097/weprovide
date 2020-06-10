@@ -2,6 +2,9 @@
   <div class="name">
     <div v-bind:style="styleObject" class="card-container">
       <div class="fields">
+        <div class="name-title">
+          <h3>VUL JE NAAM EN ACHTERNAAM IN</h3>
+        </div>
         <div class="field">
           <input v-bind:class="{ 'has-warning': attemptSubmit && missingFirstName }" class="input-label" type="text" placeholder="voornaam" v-model="firstname">
           <p v-if="attemptSubmit && missingFirstName" class="red-text">test1</p>
@@ -23,45 +26,45 @@
         <h3>SELECTEER DE FUNCTIE WAARVOOR JE SOLLICITEERT</h3>
       </div>
       <div class="jobs-offers">
-        <input type="radio" id="test" name="test" value="frontend" v-model="job">
+        <input type="radio" id="test" name="test" value="frontend-junior/medior" v-model="job">
         <label for="test">
           <div class="left-bracket"></div>
-          <div class="start-button-label">Frontend</div>
+          <div class="start-button-label">Frontend<div class="small-text">junior/medior</div></div>
           <div class="right-bracket"></div>
           <div class="button-gradient"></div>
         </label>
 
-        <input type="radio" id="test2" name="test" value="backend" v-model="job">
+        <input type="radio" id="test2" name="test" value="backend-junior/medior" v-model="job">
         <label for="test2">
           <div class="left-bracket"></div>
-          <div class="start-button-label">Backend</div>
+          <div class="start-button-label">Backend<div class="small-text">junior/medior</div></div>
           <div class="right-bracket"></div>
           <div class="button-gradient"></div>
         </label>
 
-        <input type="radio" id="test3" name="test" value="devops" v-model="job">
+        <input type="radio" id="test3" name="test" value="backend-senior" v-model="job">
         <label for="test3">
           <div class="left-bracket"></div>
-          <div class="start-button-label">Devops</div>
+          <div class="start-button-label">Backend<div class="small-text">senior</div></div>
           <div class="right-bracket"></div>
           <div class="button-gradient"></div>
         </label>   
       </div>
 
       <div class="jobs-continue">
-        <button @click="displayRadioValue" v-show="job === 'frontend'" type="button" class="start-button">
+        <button @click="displayRadioValue" v-show="job === 'frontend-junior/medior'" type="button" class="start-button">
           <div class="left-bracket"></div>
           <div class="start-button-label">Play</div>
           <div class="right-bracket"></div>
           <div class="button-gradient"></div>
         </button>
-        <button @click="displayRadioValue" v-show="job === 'backend'" type="button" class="start-button">
+        <button @click="displayRadioValue" v-show="job === 'backend-junior/medior'" type="button" class="start-button">
           <div class="left-bracket"></div>
           <div class="start-button-label">Play</div>
           <div class="right-bracket"></div>
           <div class="button-gradient"></div>
         </button>
-        <button @click="displayRadioValue" v-show="job === 'devops'" type="button" class="start-button">
+        <button @click="displayRadioValue" v-show="job === 'backend-senior'" type="button" class="start-button">
           <div class="left-bracket"></div>
           <div class="start-button-label">Play</div>
           <div class="right-bracket"></div>
@@ -171,8 +174,21 @@ export default {
       text-align: left;
     }
     .fields{
-      width: 400px;
+      width: 500px;
       margin: 100px;
+      .name-title{
+        text-align: left;
+        margin-bottom: 40px;
+        h3{
+          font-weight: bolder;
+          font-size: 24px;
+          line-height: 28px;
+          letter-spacing: 1px;
+          color: #EFD15B;
+          font-family: Futura;
+          text-transform: uppercase;
+        }
+      }
       .field{
         display: block;
         text-align: left;
@@ -332,16 +348,18 @@ export default {
         }
         .start-button-label{
           position: relative;
-          top: -18px;
+          top: -9px;
           display: inline-block;
           color: #EFD15B;
           font-size: 20px;
           letter-spacing: 2px;
           width: 200px;
           text-align: center;
-          line-height: 50px;
           height: 100%;
           transition: color .3s ease-out;
+          .small-text{
+            font-size: 10px;
+          }
         }
         .right-bracket{
           background: url("~@/assets/bracket2.png");
@@ -800,6 +818,12 @@ export default {
       }
       .fields{
         margin: 20px;
+        .name-title{
+          h3{
+            font-size: 20px;
+            line-height: 24px;
+          }
+        }
         .field{
           .input-label{
             border-bottom: 1px solid #EFD15B;

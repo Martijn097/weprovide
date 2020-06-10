@@ -61,6 +61,11 @@ const router = new VueRouter({
     //   component: () => import( '@/components/auth/Signup')
     // },
     {
+      path: '/congratulations',
+      name: 'Congratulations',
+      component: () => import( '@/views/Congratulations')
+    },
+    {
       path: '/dashboard',
       name: 'Dashboard',
       component: Dashboard,

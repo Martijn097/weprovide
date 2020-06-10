@@ -11,21 +11,55 @@
 
     <transition name="fade">
     <div id="blocker" ref="blocker" v-show="!controlsEnabled" >
+
       <div class="popup-wrapper">
+        <button class="click-on-close" @click="clickOnClose">close</button>
         <div class="popup">
           <div class="popup-text">
-            <!-- <NewMessage :name="name" :jobs="jobs" /> -->
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat consectetur 
-              tenetur iste explicabo! Suscipit illo dolorem voluptas libero tempore labore temporibus, 
-              ratione sit vel ad, placeat, deleniti aliquam assumenda magnam!</p>
-            <!-- <li v-for="message in messages" :key="message.id">
-              <span>{{ message.name }}</span>
-              <span>{{ message.jobs }}</span>
-              <span>{{ message.content }}</span>
-              <span>{{ message.timestamp }}</span>
-            </li> -->
-            <button @click="clickOnClose">close</button>
+            <p>Ga op zoek naar een kaartje. Dit kaartje brengt je een stap verder</p>
           </div>
+        </div>
+      </div>
+
+      <div class="popup-card-wrapper">
+        <button class="click-on-close" @click="clickOnClose">close</button>
+        <div class="popup-card">
+          <img src="@/assets/img/card.png" alt="card">
+        </div>
+      </div>
+
+      <div class="popup-laptop-wrapper">
+        <button class="click-on-close" @click="clickOnClose">close</button>
+        <div class="popup-laptop">
+          <div class="laptop">
+            <div class="screen">
+              <div class="signature">
+                <div class="black">
+                  <div class="laptop-login">
+                    <h2>Vul het wachtwoord in</h2>
+                    <p>{{ laptopPassword }}</p>
+                    <p class="false">fout</p>
+                  </div>
+                  <div class="laptop-login-true">
+                    <h2>De code</h2>
+                    <p class="true">4294</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="keyboard"></div>
+          </div>
+          <div class="field">
+            <input class="input-label" type="text" placeholder="typ hier" v-model='laptopPassword'>
+          </div>
+          <div @click="laptopEnter" class="laptop-btn">enter</div>
+        </div>
+      </div>
+
+      <div class="popup-lock-wrapper">
+        <button class="click-on-close" @click="clickOnClose">close</button>
+        <div class="popup-lock">
+          <NewMessage :name="name" :jobs="jobs" v-model='lockCode'/>
         </div>
       </div>
 
@@ -61,11 +95,11 @@
       </div>
 		</div>
     </transition>
-    <div class="controls">
+    <!-- <div class="controls">
       <button @click="movePosition(5,5,0)">Move a</button>
       <button @click="movePosition(5,15,0)">Move b</button>
       <button @click="movePosition(15,5,0)">Move c</button>
-    </div>
+    </div> -->
     <div class="container" ref="canvas">
       <div class="center">
         <div class="marker"></div>
@@ -121,12 +155,17 @@ export default {
       loadingScreen: undefined,
       loadingManager: null,
       elem: null,
+      laptopPassword: undefined,
+      lockCode: undefined,
       popup: undefined,
       cube: undefined,
       wall: undefined,
       mouse: undefined,
       group: undefined,
+      laptop: [],
       paper: [],
+      card: [],
+      lock: [],
       walls: [],
       wallMesh: [],
       cubeMesh: [],
@@ -202,6 +241,9 @@ export default {
 
       // Add eventlistener click interaction 3D object
       document.addEventListener('mousedown', this.onDocumentMouseDown, false);
+      document.addEventListener('mousedown', this.onDocumentMouseDownCard, false);
+      document.addEventListener('mousedown', this.onDocumentMouseDownLaptop, false);
+      document.addEventListener('mousedown', this.onDocumentMouseDownLock, false);
       window.addEventListener( 'mousemove', this.onMouseMove, false );
 
       // Add eventlisteren responsive
@@ -227,7 +269,10 @@ export default {
       // initialise 3D Objects
       this.initCreateRoom();
       this.initCreatePaper();
-      this.initCube();
+      this.initCreateCard();
+      this.initCreateBox();
+      this.initCreateLaptop();
+      this.initCreateLock();
       this.initWallNorth();
       this.initWallSouth();
       this.initWallWest();
@@ -248,10 +293,10 @@ export default {
     initCreateRoom () {
       const loader = new GLTFLoader(this.loadingManager)
       loader.load('/blender/escape_room.glb', gltf => {
-      // loader.load('/blender/room_1.glb', gltf => {
           this.scene.add(gltf.scene)
-          gltf.scene.position.set(0, 15, 0)
+          gltf.scene.position.set(0, 15, -50)
           gltf.scene.scale.set(8, 8, 8)
+          gltf.scene.rotation.y = -1.5708
         },
         function (xhr) {
           console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
@@ -265,34 +310,60 @@ export default {
     initCreatePaper () {
       const loader = new GLTFLoader(this.loadingManager)
       loader.load('/blender/paper.glb', gltf => {
-      // loader.load('/blender/room_1.glb', gltf => {
-          gltf.scene.position.set(-33, 12, -15)
+          gltf.scene.position.set(10, 11, -80)
           gltf.scene.scale.set(5, 5, 5)
-
           this.paper.push(gltf.scene);
           this.scene.add(gltf.scene);
-          // this.objects.push(this.paper)
-
         },
       );
     },
-    initCube () {
-      this.cube = this.scene.getObjectByName("Cube");
-      this.cube = new CubeObject(20, 20, 20)
-        .create()
-        .setPosition(0,10,-80)
-        
-      this.cubeMesh = this.cube.cubeMesh;
-
-      this.scene.add(this.cubeMesh);
-      this.objects.push(this.cubeMesh);
+    initCreateCard () {
+      const loader = new GLTFLoader(this.loadingManager)
+      loader.load('/blender/card.glb', gltf => {
+          gltf.scene.position.set(-38.5, 2, -132)
+          gltf.scene.scale.set(1, 1, 1)
+          this.card.push(gltf.scene);
+          this.scene.add(gltf.scene);
+        },
+      );
+    },
+    initCreateBox () {
+      const loader = new GLTFLoader(this.loadingManager)
+      loader.load('/blender/wood_box.glb', gltf => {
+          gltf.scene.position.set(140, 10, 30)
+          gltf.scene.scale.set(8, 8, 8)
+          this.scene.add(gltf.scene);
+        },
+      );
+    },
+    initCreateLaptop () {
+      const loader = new GLTFLoader(this.loadingManager)
+      loader.load('/blender/laptop.glb', gltf => {
+          gltf.scene.position.set(138, 18, 28)
+          gltf.scene.scale.set(2.5, 2.5, 2.5)
+          gltf.scene.rotation.y = 4.10152
+          this.laptop.push(gltf.scene);
+          this.scene.add(gltf.scene);
+        },
+      );
+    },
+    initCreateLock () {
+      const loader = new GLTFLoader(this.loadingManager)
+      loader.load('/blender/lockfordoor.glb', gltf => {
+          gltf.scene.position.set(-84, 10, -8.5)
+          gltf.scene.scale.set(8, 8, 8)
+          gltf.scene.rotation.y = 1.5708
+          this.lock.push(gltf.scene);
+          this.scene.add(gltf.scene);
+        },
+      );
     },
     initWallNorth () {
       this.group = new THREE.Group();
       this.wall = this.scene.getObjectByName("Wall");
-      this.wall = new WallObject(300, 100, 10)
+      this.wall = new WallObject(10, 100, 300)
         .create()
-        .setPosition(-50,10,-160)
+        .setPosition(-100,10, -20)
       
       this.wallMesh = this.wall.wallMesh;
       this.group.add(this.wallMesh);
@@ -301,9 +372,9 @@ export default {
     },
     initWallSouth () {
       this.wall = this.scene.getObjectByName("Wall");
-      this.wall = new WallObject(300, 100, 10)
+      this.wall = new WallObject(10, 100, 300)
         .create()
-        .setPosition(-50,10,105)
+        .setPosition(160,10,-20)
         
       this.wallMesh = this.wall.wallMesh;
       this.group.add(this.wallMesh);
@@ -312,9 +383,9 @@ export default {
     },
     initWallWest () {
       this.wall = this.scene.getObjectByName("Wall");
-      this.wall = new WallObject(10, 100, 300)
+      this.wall = new WallObject(300, 100, 10)
         .create()
-        .setPosition(-120,10,0)
+        .setPosition(20,10,-160)
         
       this.wallMesh = this.wall.wallMesh;
       this.group.add(this.wallMesh);
@@ -323,9 +394,9 @@ export default {
     },
     initWallEast () {
       this.wall = this.scene.getObjectByName("Wall");
-      this.wall = new WallObject(10, 100, 300)
+      this.wall = new WallObject(300, 100, 10)
         .create()
-        .setPosition(100,10,0)
+        .setPosition(20,10,62)
         
       this.wallMesh = this.wall.wallMesh;
       this.group.add(this.wallMesh);
@@ -339,6 +410,39 @@ export default {
       if (intersects.length > 0) {
         // intersects[0].object.material.color.setHex(Math.random() * 0xdec67a);
         this.popup = document.querySelector(".popup-wrapper"); // Element into which appending will be done
+        this.popup.style.display = 'flex'; // show
+        document.exitPointerLock();
+      }
+    },
+    onDocumentMouseDownCard (){
+      this.raycaster.setFromCamera( this.mouse, this.camera );
+      var intersects = this.raycaster.intersectObjects(this.card, true);
+
+      if (intersects.length > 0) {
+        // intersects[0].object.material.color.setHex(Math.random() * 0xdec67a);
+        this.popup = document.querySelector(".popup-card-wrapper"); // Element into which appending will be done
+        this.popup.style.display = 'flex'; // show
+        document.exitPointerLock();
+      }
+    },
+    onDocumentMouseDownLaptop (){
+      this.raycaster.setFromCamera( this.mouse, this.camera );
+      var intersects = this.raycaster.intersectObjects(this.laptop, true);
+
+      if (intersects.length > 0) {
+        // intersects[0].object.material.color.setHex(Math.random() * 0xdec67a);
+        this.popup = document.querySelector(".popup-laptop-wrapper"); // Element into which appending will be done
+        this.popup.style.display = 'flex'; // show
+        document.exitPointerLock();
+      }
+    },
+    onDocumentMouseDownLock (){
+      this.raycaster.setFromCamera( this.mouse, this.camera );
+      var intersects = this.raycaster.intersectObjects(this.lock, true);
+
+      if (intersects.length > 0) {
+        // intersects[0].object.material.color.setHex(Math.random() * 0xdec67a);
+        this.popup = document.querySelector(".popup-lock-wrapper"); // Element into which appending will be done
         this.popup.style.display = 'flex'; // show
         document.exitPointerLock();
       }
@@ -359,6 +463,21 @@ export default {
       } else {
         if ( this.INTERSECTED ) this.INTERSECTED.material.color.setHex( this.INTERSECTED.currentHex );
         this.INTERSECTED = null;
+      }
+    },
+    laptopEnter(){
+      if (this.laptopPassword === 'git') {
+        this.laptopLogin = document.querySelector(".laptop-login"); // Element into which appending will be done
+        this.laptopLogin.style.display = 'none'; // hide
+        this.laptopLoginInput = document.querySelector(".field"); // Element into which appending will be done
+        this.laptopLoginInput.style.display = 'none'; // hide
+        this.laptopLoginBtn = document.querySelector(".laptop-btn"); // Element into which appending will be done
+        this.laptopLoginBtn.style.display = 'none'; // hide
+        this.laptopLoginTrue = document.querySelector(".laptop-login-true"); // Element into which appending will be done
+        this.laptopLoginTrue.style.display = 'block'; // hide
+      } else {
+        this.laptopLoginFalse = document.querySelector(".false"); // Element into which appending will be done
+        this.laptopLoginFalse.style.display = 'block'; // hide
       }
     },
     clickOnClose(){
@@ -702,6 +821,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.click-on-close{
+  cursor: pointer;
+  position: absolute;
+  display: inline-block;
+  padding: 10px 60px;
+  height: 50px;
+  box-sizing: border-box;
+  width: auto;
+  color: black;
+  text-transform: uppercase;
+  font-size: 20px;
+  font-weight: bolder;
+  font-family: futura;
+  background-color: white;
+  transition: opacity 0.3s;
+  border: none;
+  right: 20px;
+  bottom: 20px;
+  &:hover{
+    opacity: 0.7;
+  }
+}
 canvas{
   width: 100%;
   height: 100%;
@@ -724,6 +865,9 @@ canvas{
     z-index: 2;
     display: none;
     .popup{
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width: 55%;
       height: 70%;
       background: #fafafa;
@@ -768,9 +912,195 @@ canvas{
         color: black;
         font-family: Futura;
         text-transform: uppercase;
-        font-size: 50px;
+        font-size: 40px;
         font-weight: bolder;
       }
+    }
+  }
+  .popup-card-wrapper{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 2;
+    display: none;
+    .popup-card{
+      width: 60%;
+      position: relative;
+      img{
+        width: 100%; 
+      }
+    }
+  }
+  .popup-laptop-wrapper{
+    background-color: black;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 2;
+    display: none;
+    .popup-laptop{
+      width: 60%;
+      position: relative;
+      .laptop {
+        position: relative;
+        max-width: 800px;
+        margin: 0 auto;
+        font-family: futura;
+        font-weight: bolder;
+        text-transform: uppercase;
+        margin-bottom: 40px;
+        .screen {
+          width: 80%;
+          padding: 5.5% 10%;
+          margin: 0 10%;
+          background: #000000;
+          border-radius: 20px 20px 0 0;
+          overflow: hidden;
+          box-shadow: 0 0 0 2px #acabb1;
+          .signature {	
+            position: relative;
+            .black{
+              width: 100%;
+              height: 300px;
+              background-color:black;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              flex-direction: column;
+              .laptop-login{
+                display: block;
+                .false{
+                  display: none;
+                  color: red;
+                }
+                h2{
+                  text-align: center;
+                  color: white;
+                }
+              }
+              .laptop-login-true{
+                display: none;
+                .true{
+                  font-size: 40px;
+                  color: lime;
+                }
+                h2{
+                  text-align: center;
+                  color: white;
+                }
+              }
+            }
+          }
+        }
+        .keyboard {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: #7e7d83;
+          height: 5%;
+          border-radius: 0 0 100% 100%;
+          &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: #acabb1;
+          }
+          &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 40%;
+            right: 40%;
+            height: 50%;
+            background: #cac9cf;
+          }
+        }
+      }
+      .field{
+        display: block;
+        text-align: left;
+        margin-bottom: 20px;
+        .input-label{
+          font-family: Futura;
+          text-transform: uppercase;
+          padding-left: 35px;
+          color: white;
+          position: relative;
+          background-color: transparent;
+          display: block;
+          width: 100%;
+          font-size: 20px;
+          line-height: 50px;
+          border-top-width: initial;
+          border-right-width: initial;
+          border-left-width: initial;
+          border-top-color: initial;
+          border-right-color: initial;
+          border-left-color: initial;
+          outline: none;
+          border-radius: 0px;
+          border-style: none none solid;
+          border-image: initial;
+          border-bottom: 2px solid white;
+          transition: all 0.25s ease 0s;
+          &:focus{
+            color: white;
+            transition: all 0.5s ease 0s;
+          }
+        }      
+        &:before{
+          content: url("~@/assets/img/edit.png");
+          width: 16px;
+          height: 16px;
+          display: block;
+          position: absolute;
+          margin-top: 14px;
+        }
+      } 
+      .laptop-btn{
+        cursor: pointer;
+        position: relative;
+        display: inline-block;
+        padding: 10px 60px;
+        height: 50px;
+        box-sizing: border-box;
+        width: auto;
+        color: black;
+        text-transform: uppercase;
+        font-size: 20px;
+        font-weight: bolder;
+        font-family: futura;
+        background-color:white;
+        transition: opacity 0.3s;
+        &:hover{
+          opacity: 0.7;
+        }
+      }
+    }
+  }
+  .popup-lock-wrapper{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background-color: black;
+    z-index: 2;
+    display: none;
+    .popup-lock{
+      width: 60%;
+      position: relative;
     }
   }
   #loading-screen {
