@@ -68,10 +68,10 @@
         <h4>Menu</h4>
 			</div>
        <div class="wrapper">
-        <div class="map">
+        <!-- <div class="map">
           <div class="btn-gradient"></div>
           <img src="~@/assets/img/map.svg" alt="Map">
-        </div>
+        </div> -->
         <div @click="openFullscreen" class="fullscreen">
           <div class="btn-gradient"></div>
           <img v-bind:style="styleObjectFullscreenOn" class="fullscreen-on" src="~@/assets/img/fullscreen.svg" alt="Fullscreen">
@@ -82,10 +82,10 @@
           <img v-bind:style="styleObjectSoundOn" class="sound-on" src="~@/assets/img/speaker.svg" alt="Sound">
           <img v-bind:style="styleObjectSoundOff" class="sound-off" src="~@/assets/img/sound_off.png" alt="Sound Off">
         </div>
-        <div class="lock">
+        <!-- <div class="lock">
           <div class="btn-gradient"></div>
           <img src="~@/assets/img/lock.svg" alt="Lock">
-        </div>
+        </div> -->
       </div>
       <div @click="clickOnInstructions" class="start-button">
         <div class="left-bracket"></div>
@@ -104,7 +104,12 @@
       <div class="center">
         <div class="marker"></div>
         <div class="center-down">
-          <div class="mouse m-1"></div>
+          <div class="w">w</div>
+          <div class="under">
+            <div class="a">a</div>
+            <div class="s">s</div>
+            <div class="d">d</div>
+          </div>
         </div>
       </div>
     </div>
@@ -141,6 +146,7 @@ export default {
       camera: undefined,
       scene: undefined,
       box: undefined,
+      texture: undefined,
       renderer: undefined,
       controls: undefined,
       objects: [],
@@ -282,7 +288,7 @@ export default {
       this.initRenderer();
     },
     initRenderer () {
-      this.renderer = new THREE.WebGLRenderer();
+      this.renderer = new THREE.WebGLRenderer({ antialias: true });
       this.renderer.gammaOutput = true;
       this.renderer.gammaFactor = 2.2;
       this.renderer.setClearColor(0x151515);
@@ -297,6 +303,7 @@ export default {
           gltf.scene.position.set(0, 15, -50)
           gltf.scene.scale.set(8, 8, 8)
           gltf.scene.rotation.y = -1.5708
+          this.texture.minFilter = THREE.LinearFilter;
         },
         function (xhr) {
           console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
@@ -1392,37 +1399,47 @@ canvas{
     padding: 0;
   }
   .container{
-    .center-down{
-      position: fixed;
-      bottom: 0;
-      margin: auto;
-      left: calc(50% - 20px);
-      margin-bottom: 20px;
-      .mouse {
-        bottom: 0;
-        width: 40px;
-        height: 60px;
-        border-radius: 20px;
-        border: 3px solid #EFD15B;
-      }
-      .mouse:before, .mouse:after {
-        content: "";
-        display: block;
-        position: absolute;
-      }
-      /* Second */
-      .m-1:before {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        top: 10px;
-        left: calc(50% - 5px);
-        background: #EFD15B;
-        -webkit-animation: m-1-ball 1.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-                animation: m-1-ball 1.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-      }
-    }
     .center{
+      .center-down{
+        position: absolute;
+        font-size: 20px;
+        text-transform: uppercase;
+        font-weight: bolder;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        .w{
+          width: 58px;
+          padding: 10px;
+          border: 2px solid #EFD15B;
+          margin: auto;
+          margin-bottom: 5px;
+        }
+        .under{
+          display: flex;
+          justify-content: center;
+          margin-bottom: 10px;
+          .a{
+            width: 58px;
+            padding: 10px;
+            margin: 5px;
+            border: 2px solid #EFD15B;
+          }
+          .s{
+            width: 58px;
+            padding: 10px;
+            margin: 5px;
+            border: 2px solid #EFD15B;
+          }
+          .d{
+            width: 58px;
+            padding: 10px;
+            margin: 5px;
+            border: 2px solid #EFD15B;
+          }
+        }
+      }
       .marker{
         width:50px;
         height: 50px;
@@ -1493,53 +1510,5 @@ canvas{
   0% {-webkit-transform: scale( 0.8 );-moz-transform: scale( 0.8 );-o-transform: scale( 0.8 );-ms-transform: scale( 0.8 );transform: scale( 0.8 );}
   50% {-webkit-transform: scale( 1 );-moz-transform: scale( 1 );-o-transform: scale( 1 );-ms-transform: scale( 1 );transform: scale( 1 );}
   100% {-webkit-transform: scale( 0.8 );-moz-transform: scale( 0.8 );-o-transform: scale( 0.8 );-ms-transform: scale( 0.8 );transform: scale( 0.8 );}
-}
-@-webkit-keyframes m-1-ball {
-  0%, 65%, 100% {
-    opacity: 0;
-  }
-  10%, 40% {
-    opacity: 1;
-  }
-  0% {
-    -webkit-transform: translateY(5px) scale(0.7);
-            transform: translateY(5px) scale(0.7);
-  }
-  5% {
-    -webkit-transform: scale(0.7);
-            transform: scale(0.7);
-  }
-  15%, 100% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
-  }
-  45%, 65% {
-    -webkit-transform: translateY(24px) scale(0.7);
-            transform: translateY(24px) scale(0.7);
-  }
-}
-@keyframes m-1-ball {
-  0%, 65%, 100% {
-    opacity: 0;
-  }
-  10%, 40% {
-    opacity: 1;
-  }
-  0% {
-    -webkit-transform: translateY(5px) scale(0.7);
-            transform: translateY(5px) scale(0.7);
-  }
-  5% {
-    -webkit-transform: scale(0.7);
-            transform: scale(0.7);
-  }
-  15%, 100% {
-    -webkit-transform: scale(1);
-            transform: scale(1);
-  }
-  45%, 65% {
-    -webkit-transform: translateY(24px) scale(0.7);
-            transform: translateY(24px) scale(0.7);
-  }
 }
 </style>
