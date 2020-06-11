@@ -1,15 +1,5 @@
 <template>
   <div id="app">
-    <!-- <div 
-     class="red_box" >Red box</div> -->
-       <!-- <CustomCursor
-      :targets="['img', 'a', 'button', 'red_box']"
-      :circleColor="'#2f2f2f'"
-      :circleColorHover="'#2f2f2f'"
-      :dotColor="'#2f2f2f'"
-      :dotColorHover="'lightgray'"
-      :hoverSize="1.8"
-    ></CustomCursor> -->
     <transition 
       name="view">
       <router-view />
@@ -19,7 +9,6 @@
 
 <script>
 import { TweenMax, Power4 } from "gsap"
-// import CustomCursor from "@/components/layout/CustomCursor"
 
 export default {
   name: 'App',
@@ -28,7 +17,6 @@ export default {
     }
   }, 
   components:{
-    // CustomCursor
   },
   computed: {
 
