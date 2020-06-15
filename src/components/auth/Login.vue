@@ -10,11 +10,9 @@
         <form @submit.prevent="login" autocomplete="nope" class="card-panel">
           <h2 class="text-header">Login</h2>
           <div class="field">
-            <!-- <label class="email-label" for="email">Email:</label> -->
             <input class="input-label" type="email" name="email" placeholder="Gebruikersnaam" v-model="email">
           </div>
           <div class="field">
-            <!-- <label class="email-label" for="password">Password:</label> -->
             <input class="input-label" type="password" name="password" placeholder="Wachtwoord" v-model="password">
           </div>
           <p v-if="feedback" class="red-text center">{{ feedback }}</p>
@@ -41,11 +39,9 @@ export default {
     },
     methods: {
       login(){
-        // console.log(this.email, this.password)
         if(this.email && this.password){
           firebase.auth().signInWithEmailAndPassword(this.email, this.password)
           .then(cred =>{
-            // console.log(cred)
             this.$router.push({ name: 'Dashboard' })
           }).catch(err => {
             this.feedback = err.message

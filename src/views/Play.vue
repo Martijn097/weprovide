@@ -195,7 +195,6 @@ export default {
       moveBackward: false,
       moveLeft: false,
       moveRight: false,
-      sprinting: false,
       moveY: 0,
 
       prevTime: undefined,
@@ -426,8 +425,7 @@ export default {
       var intersects = this.raycaster.intersectObjects(this.card, true);
 
       if (intersects.length > 0) {
-        // intersects[0].object.material.color.setHex(Math.random() * 0xdec67a);
-        this.popup = document.querySelector(".popup-card-wrapper"); // Element into which appending will be done
+        this.popup = document.querySelector(".popup-card-wrapper");
         this.popup.style.display = 'flex'; // show
         document.exitPointerLock();
       }
@@ -647,9 +645,6 @@ export default {
         case 68: // d
           this.moveRight = true;
           break;
-        case 16:
-          this.sprinting = true;
-          break;
       } 
     },
     onKeyUp (event) {
@@ -669,9 +664,6 @@ export default {
         case 39: // right
         case 68: // d
           this.moveRight = false;
-          break;
-        case 16:
-          this.sprinting = false;
           break;
       }
     },

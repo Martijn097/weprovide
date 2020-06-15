@@ -1,6 +1,5 @@
 <template>
   <div class="dashboard-page">
-    <!-- <Navbar /> -->
     <div class="navbar">
       <div class="container">
         <nav role="navigation">
@@ -89,7 +88,6 @@ export default {
     document.body.className = 'dashboard';
   },
   created(){
-    // let user = firebase.auth().currentUser
     firebase.auth().onAuthStateChanged((user) => {
       if(user){
         this.user = user

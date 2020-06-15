@@ -131,7 +131,6 @@ export default {
         console.log('gelukt');
         this.verander();
         this.verander2();
-        // this.opacity='0';
       }
     },
     displayRadioValue(){
@@ -141,7 +140,7 @@ export default {
       for(i = 0; i < ele.length; i++) { 
         if(ele[i].type="radio") { 
           if(ele[i].checked) 
-            db.collection('hoi').add({
+            db.collection('user').add({
               name: this.firstname + ' ' + this.lastname,
               jobs: this.job
             }).then(() => {
